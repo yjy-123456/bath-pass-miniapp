@@ -67,3 +67,28 @@ test('normalizeRedeemToken accepts QR payloads and plain tokens', () => {
   assert.equal(normalizeRedeemToken('BATHPASS:abc123'), 'abc123');
   assert.equal(normalizeRedeemToken('  abc123  '), 'abc123');
 });
+
+test('maskPhone hides middle digits and keeps invalid values empty', () => {
+  const { maskPhone } = require('../shared/business');
+
+  assert.equal(maskPhone('13812340000'), '138****0000');
+  assert.equal(maskPhone(''), '');
+  assert.equal(maskPhone(null), '');
+});
+
+test('createContactSnapshot stores full and masked phone', () => {
+  const { createContactSnapshot } = require('../shared/business');
+
+  assert.deepEqual(createContactSnapshot('13812340000'), {
+    contactPhoneSnapshot: '13812340000',
+    contactPhoneMaskedSnapshot: '138****0000',
+  });
+});
+
+test('hasBoundPhone accepts only non-empty phone numbers', () => {
+  const { hasBoundPhone } = require('../shared/business');
+
+  assert.equal(hasBoundPhone({ phoneNumber: '13812340000' }), true);
+  assert.equal(hasBoundPhone({ phoneNumber: '' }), false);
+  assert.equal(hasBoundPhone(null), false);
+});
