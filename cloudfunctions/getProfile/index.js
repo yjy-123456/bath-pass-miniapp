@@ -7,8 +7,8 @@ exports.main = async () => {
   const staff = await getActiveStaff(OPENID);
 
   return ok({
-    openid: OPENID,
     user,
+    openid: OPENID,
     hasPhone: hasBoundPhone(user),
     isStaff: Boolean(staff),
     staff,

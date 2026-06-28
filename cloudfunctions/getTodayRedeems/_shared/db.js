@@ -23,6 +23,38 @@ async function getActiveStaff(openid) {
   return result.data[0] || null;
 }
 
+async function getOrCreateUser(openid) {
+  const now = new Date();
+  const users = db.collection('users');
+  const existing = await users.where({ openid }).limit(1).get();
+
+  if (existing.data.length) {
+    await users.doc(existing.data[0]._id).update({
+      data: {
+        lastLoginAt: now,
+        updatedAt: now,
+      },
+    });
+    return { ...existing.data[0], lastLoginAt: now, updatedAt: now };
+  }
+
+  const user = {
+    openid,
+    nickname: '微信用户',
+    avatarUrl: '',
+    role: 'user',
+    phoneNumber: '',
+    phoneNumberMasked: '',
+    phoneBoundAt: null,
+    phoneUpdatedAt: null,
+    createdAt: now,
+    lastLoginAt: now,
+    updatedAt: now,
+  };
+  const result = await users.add({ data: user });
+  return { _id: result._id, ...user };
+}
+
 async function requireStaff(openid) {
   const staff = await getActiveStaff(openid);
   if (!staff) {
@@ -59,6 +91,7 @@ module.exports = {
   findOne,
   getActiveStaff,
   getById,
+  getOrCreateUser,
   ok,
   requireStaff,
   todayRange,

@@ -17,6 +17,8 @@ const requiredFiles = [
   'miniprogram/pages/staff/confirm/index.js',
   'miniprogram/pages/staff/records/index.js',
   'cloudfunctions/getProducts/index.js',
+  'cloudfunctions/getProfile/index.js',
+  'cloudfunctions/bindPhoneNumber/index.js',
   'cloudfunctions/login/index.js',
   'cloudfunctions/seedDemoData/index.js',
   'cloudfunctions/createOrder/index.js',
