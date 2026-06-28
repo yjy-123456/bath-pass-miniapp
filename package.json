@@ -1,0 +1,10 @@
+{
+  "name": "bath-pass-miniapp",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "prepare:cloud": "node scripts/prepare-cloudfunctions.js",
+    "test": "node --test tests/business.test.js",
+    "check": "npm run prepare:cloud && npm test && node scripts/check-structure.js"
+  }
+}

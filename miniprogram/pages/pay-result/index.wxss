@@ -1,0 +1,27 @@
+.result {
+  margin-top: 80rpx;
+  text-align: center;
+}
+
+.icon {
+  width: 120rpx;
+  height: 120rpx;
+  margin: 16rpx auto 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #fff7ed;
+  color: #b45309;
+  font-size: 64rpx;
+  font-weight: 800;
+}
+
+.icon.paid {
+  background: #dff3ea;
+  color: #16805f;
+}
+
+.subtle {
+  margin-top: 14rpx;
+}

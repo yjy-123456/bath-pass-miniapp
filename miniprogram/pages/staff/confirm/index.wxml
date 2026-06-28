@@ -1,0 +1,29 @@
+<view class="page">
+  <view wx:if="{{error}}" class="card">
+    <view class="title danger">不可核销</view>
+    <view class="notice">{{error}}</view>
+    <button class="btn secondary" bindtap="back">返回</button>
+  </view>
+
+  <view wx:else class="card">
+    <view class="title">待确认核销</view>
+    <view class="info-row">
+      <text class="subtle">套餐</text>
+      <text>{{coupon.productSnapshot.name}}</text>
+    </view>
+    <view class="info-row">
+      <text class="subtle">券状态</text>
+      <text class="badge">可核销</text>
+    </view>
+    <view class="info-row">
+      <text class="subtle">有效期</text>
+      <text>{{validToText}}</text>
+    </view>
+    <view class="info-row">
+      <text class="subtle">券号后 4 位</text>
+      <text>{{couponTail}}</text>
+    </view>
+    <button class="btn warn" bindtap="redeem">确认核销</button>
+    <button class="btn secondary" bindtap="back">取消</button>
+  </view>
+</view>

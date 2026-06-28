@@ -1,0 +1,22 @@
+<view class="page">
+  <view class="card summary">
+    <view class="success">✓</view>
+    <view class="title">今日核销</view>
+    <view class="subtle">成功 {{successCount}} 张 · 失败 {{failedCount}} 次</view>
+  </view>
+
+  <view wx:if="{{records.length}}" class="stack records">
+    <view class="card record" wx:for="{{records}}" wx:key="_id">
+      <view class="row">
+        <view>
+          <view class="record-title">{{item.timeText}} {{item.productName || '未知套餐'}}</view>
+          <view class="subtle">券号 {{item.couponNo || '-'}}</view>
+          <view class="subtle">店员 {{item.staffName || '-'}}</view>
+        </view>
+        <text class="badge {{item.status === 'failed' ? 'failed' : ''}}">{{item.statusText}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:else class="empty">今日暂无核销记录</view>
+</view>

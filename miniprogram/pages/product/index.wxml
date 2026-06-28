@@ -1,0 +1,39 @@
+<view class="page" wx:if="{{product}}">
+  <view class="card">
+    <view class="row">
+      <view>
+        <view class="title">{{product.name}}</view>
+        <view class="subtle">{{product.description}}</view>
+      </view>
+      <view class="price">{{product.priceText}}</view>
+    </view>
+    <view class="detail">{{product.detail}}</view>
+  </view>
+
+  <view class="card section">
+    <view class="section-title">套餐包含</view>
+    <view class="line" wx:for="{{product.includes}}" wx:key="*this">{{item}}</view>
+  </view>
+
+  <view class="card section">
+    <view class="section-title">使用规则</view>
+    <view class="line" wx:for="{{product.rules}}" wx:key="*this">{{item}}</view>
+    <view class="notice small">{{product.refundRule}}</view>
+  </view>
+
+  <view class="card section">
+    <view class="row">
+      <text class="subtle">购买数量</text>
+      <view class="stepper">
+        <button bindtap="decrease">-</button>
+        <text>{{quantity}}</text>
+        <button bindtap="increase">+</button>
+      </view>
+    </view>
+    <view class="row total">
+      <text>合计</text>
+      <text class="price">{{totalText}}</text>
+    </view>
+    <button class="btn" bindtap="buyNow">模拟下单并支付</button>
+  </view>
+</view>

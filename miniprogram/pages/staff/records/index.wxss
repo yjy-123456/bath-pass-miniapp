@@ -1,0 +1,32 @@
+.summary {
+  text-align: center;
+}
+
+.success {
+  width: 112rpx;
+  height: 112rpx;
+  margin: 8rpx auto 18rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #dff3ea;
+  color: #16805f;
+  font-size: 62rpx;
+  font-weight: 800;
+}
+
+.records {
+  margin-top: 22rpx;
+}
+
+.record-title {
+  margin-bottom: 8rpx;
+  font-size: 27rpx;
+  font-weight: 800;
+}
+
+.badge.failed {
+  background: #fee4e2;
+  color: #b42318;
+}

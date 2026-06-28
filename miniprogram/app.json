@@ -1,0 +1,40 @@
+{
+  "pages": [
+    "pages/home/index",
+    "pages/product/index",
+    "pages/pay-result/index",
+    "pages/coupons/index",
+    "pages/coupon-code/index",
+    "pages/staff/index/index",
+    "pages/staff/confirm/index",
+    "pages/staff/records/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "澡堂电子券",
+    "navigationBarBackgroundColor": "#fbfaf8",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f4f1ec"
+  },
+  "tabBar": {
+    "color": "#7b8794",
+    "selectedColor": "#2f6f73",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "套餐"
+      },
+      {
+        "pagePath": "pages/coupons/index",
+        "text": "我的券"
+      },
+      {
+        "pagePath": "pages/staff/index/index",
+        "text": "商家"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

@@ -1,0 +1,45 @@
+.section {
+  margin-top: 20rpx;
+}
+
+.section-title {
+  margin-bottom: 14rpx;
+  font-size: 30rpx;
+  font-weight: 800;
+}
+
+.detail,
+.line {
+  margin-top: 14rpx;
+  color: #4b5563;
+  font-size: 26rpx;
+  line-height: 1.55;
+}
+
+.small {
+  margin-bottom: 0;
+  font-size: 23rpx;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 22rpx;
+}
+
+.stepper button {
+  width: 58rpx;
+  height: 58rpx;
+  border-radius: 12rpx;
+  background: #edf6f4;
+  color: #2f6f73;
+  font-size: 34rpx;
+}
+
+.stepper button::after {
+  border: 0;
+}
+
+.total {
+  margin-top: 24rpx;
+}

@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>澡堂电子券小程序 MVP 原型</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #1f2933;
+      background:
+        linear-gradient(135deg, rgba(54, 115, 121, 0.12), rgba(218, 141, 84, 0.10)),
+        #f4f1ec;
+    }
+
+    .page {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 28px 22px 42px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      font-weight: 780;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 720px;
+      margin: 0;
+      color: #66717f;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .legend {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 30px;
+      padding: 0 10px;
+      border: 1px solid rgba(31, 41, 51, 0.12);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      color: #4b5563;
+      font-size: 13px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(250px, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .phone {
+      overflow: hidden;
+      min-height: 680px;
+      border: 1px solid rgba(31, 41, 51, 0.14);
+      border-radius: 28px;
+      background: #fbfaf8;
+      box-shadow: 0 16px 38px rgba(45, 55, 72, 0.14);
+    }
+
+    .status {
+      height: 34px;
+      padding: 11px 18px 0;
+      display: flex;
+      justify-content: space-between;
+      color: #111827;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .screen-title {
+      padding: 14px 18px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(31, 41, 51, 0.08);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .screen-title strong {
+      font-size: 17px;
+    }
+
+    .screen-title span {
+      color: #7b8794;
+      font-size: 12px;
+    }
+
+    .content {
+      padding: 16px;
+    }
+
+    .store-hero {
+      height: 130px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      border-radius: 8px;
+      color: #ffffff;
+      background:
+        linear-gradient(180deg, rgba(20, 31, 38, 0.12), rgba(20, 31, 38, 0.72)),
+        url("https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=900&q=80") center/cover;
+    }
+
+    .store-hero h2 {
+      margin: 0 0 6px;
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    .store-hero p {
+      margin: 0;
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .notice {
+      margin: 12px 0;
+      padding: 10px 12px;
+      border: 1px solid rgba(198, 125, 69, 0.20);
+      border-radius: 8px;
+      background: #fff7ed;
+      color: #8a4b1f;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .package-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .package {
+      padding: 13px;
+      border: 1px solid rgba(31, 41, 51, 0.09);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .package-head,
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .package h3 {
+      margin: 0 0 6px;
+      font-size: 15px;
+    }
+
+    .package p,
+    .muted {
+      margin: 0;
+      color: #778391;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .price {
+      white-space: nowrap;
+      color: #b45309;
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .btn {
+      width: 100%;
+      height: 42px;
+      margin-top: 12px;
+      border: 0;
+      border-radius: 8px;
+      background: #2f6f73;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 720;
+    }
+
+    .btn.secondary {
+      background: #fff;
+      color: #2f6f73;
+      border: 1px solid rgba(47, 111, 115, 0.28);
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      margin-bottom: 12px;
+      border: 1px solid rgba(31, 41, 51, 0.10);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .tabs span {
+      padding: 9px 4px;
+      text-align: center;
+      font-size: 12px;
+      color: #66717f;
+    }
+
+    .tabs .active {
+      color: #fff;
+      background: #2f6f73;
+      font-weight: 700;
+    }
+
+    .coupon {
+      overflow: hidden;
+      border: 1px solid rgba(31, 41, 51, 0.10);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .coupon-main {
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .coupon h3 {
+      margin: 0 0 7px;
+      font-size: 16px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #e6f3ef;
+      color: #25635f;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .coupon-foot {
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px dashed rgba(31, 41, 51, 0.18);
+      color: #778391;
+      font-size: 12px;
+    }
+
+    .qr-panel {
+      padding: 14px;
+      border: 1px solid rgba(31, 41, 51, 0.10);
+      border-radius: 8px;
+      background: #ffffff;
+      text-align: center;
+    }
+
+    .qr {
+      width: 190px;
+      height: 190px;
+      margin: 10px auto 12px;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      background: #fff;
+      border: 8px solid #f0f4f4;
+    }
+
+    .qr i {
+      display: block;
+      background: #172026;
+      border-radius: 2px;
+    }
+
+    .qr i:nth-child(3n),
+    .qr i:nth-child(5n) {
+      background: transparent;
+    }
+
+    .timer {
+      color: #b45309;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .check-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .check-item {
+      padding: 11px;
+      border-radius: 8px;
+      background: #f4f7f7;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .scan-box {
+      height: 180px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background:
+        linear-gradient(90deg, #263238 1px, transparent 1px),
+        linear-gradient(#263238 1px, transparent 1px),
+        #182329;
+      background-size: 34px 34px;
+      color: #dff7f4;
+      text-align: center;
+    }
+
+    .scan-mark {
+      width: 112px;
+      height: 112px;
+      display: grid;
+      place-items: center;
+      border: 2px solid #6ee7d8;
+      border-radius: 8px;
+      font-size: 38px;
+      font-weight: 200;
+    }
+
+    .confirm-card {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 1px solid rgba(31, 41, 51, 0.10);
+    }
+
+    .confirm-card h3 {
+      margin: 0 0 10px;
+      font-size: 17px;
+    }
+
+    .success {
+      display: grid;
+      place-items: center;
+      width: 56px;
+      height: 56px;
+      margin: 8px auto 12px;
+      border-radius: 50%;
+      background: #dff3ea;
+      color: #16805f;
+      font-size: 34px;
+      font-weight: 700;
+    }
+
+    .records {
+      display: grid;
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .record {
+      padding: 11px;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 1px solid rgba(31, 41, 51, 0.08);
+    }
+
+    .record strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    .bottom-nav {
+      margin: 18px -16px -16px;
+      padding: 10px 14px 12px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid rgba(31, 41, 51, 0.08);
+      background: #ffffff;
+      color: #7b8794;
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .bottom-nav .on {
+      color: #2f6f73;
+      font-weight: 800;
+    }
+
+    .flow {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+    }
+
+    .flow div {
+      min-height: 72px;
+      padding: 12px;
+      border: 1px solid rgba(31, 41, 51, 0.10);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.72);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .flow strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #2f6f73;
+    }
+
+    @media (max-width: 1180px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(280px, 1fr));
+      }
+
+      .flow {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 680px) {
+      .page {
+        padding: 18px 12px 30px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .legend {
+        justify-content: flex-start;
+      }
+
+      .grid,
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="topbar">
+      <div>
+        <h1>澡堂电子券小程序 MVP 原型</h1>
+        <p class="lead">第一版围绕“浏览套餐 -> 微信支付 -> 自动发券 -> 到店扫码核销”闭环。下面把用户端和商家端放在同一张确认稿里，方便先确认流程和信息层级。</p>
+      </div>
+      <div class="legend">
+        <span class="chip">用户端</span>
+        <span class="chip">商家端</span>
+        <span class="chip">MVP</span>
+      </div>
+    </section>
+
+    <section class="grid" aria-label="小程序页面原型">
+      <article class="phone">
+        <div class="status"><span>9:41</span><span>微信</span></div>
+        <div class="screen-title">
+          <strong>浴票套餐</strong>
+          <span>用户端首页</span>
+        </div>
+        <div class="content">
+          <div class="store-hero">
+            <h2>清泉浴池</h2>
+            <p>营业中 10:00-23:30 · 到店出示电子券</p>
+          </div>
+          <div class="notice">购买后自动发券。电子券有效期 30 天，未使用可申请退款，最终规则以门店说明为准。</div>
+          <div class="package-list">
+            <div class="package">
+              <div class="package-head">
+                <div>
+                  <h3>单人洗浴票</h3>
+                  <p>含洗浴入场 1 次，不含搓澡和加钟</p>
+                </div>
+                <div class="price">¥29</div>
+              </div>
+              <button class="btn">立即购买</button>
+            </div>
+            <div class="package">
+              <div class="package-head">
+                <div>
+                  <h3>洗浴 + 搓澡套餐</h3>
+                  <p>含入场 1 次 + 基础搓澡 1 次</p>
+                </div>
+                <div class="price">¥59</div>
+              </div>
+              <button class="btn secondary">查看详情</button>
+            </div>
+            <div class="package">
+              <div class="package-head">
+                <div>
+                  <h3>亲友双人票</h3>
+                  <p>一次购买生成 2 张券，可分开核销</p>
+                </div>
+                <div class="price">¥55</div>
+              </div>
+              <button class="btn secondary">查看详情</button>
+            </div>
+          </div>
+          <nav class="bottom-nav">
+            <span class="on">套餐</span>
+            <span>我的券</span>
+            <span>门店</span>
+          </nav>
+        </div>
+      </article>
+
+      <article class="phone">
+        <div class="status"><span>9:41</span><span>微信</span></div>
+        <div class="screen-title">
+          <strong>我的券包</strong>
+          <span>用户端</span>
+        </div>
+        <div class="content">
+          <div class="tabs">
+            <span class="active">未使用 2</span>
+            <span>已使用</span>
+            <span>已过期</span>
+          </div>
+          <div class="coupon">
+            <div class="coupon-main">
+              <div>
+                <h3>单人洗浴票</h3>
+                <p class="muted">券号 QY202606280018</p>
+                <p class="muted">有效期至 2026-07-28 23:59</p>
+              </div>
+              <span class="badge">未使用</span>
+            </div>
+            <div class="coupon-foot">
+              <span>到店出示二维码</span>
+              <span>查看</span>
+            </div>
+          </div>
+
+          <div class="qr-panel" style="margin-top: 14px;">
+            <p class="muted">清泉浴池 · 单人洗浴票</p>
+            <div class="qr" aria-label="核销二维码示意">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+            <div class="timer">动态码 45 秒后刷新</div>
+            <button class="btn">刷新状态</button>
+          </div>
+          <nav class="bottom-nav">
+            <span>套餐</span>
+            <span class="on">我的券</span>
+            <span>门店</span>
+          </nav>
+        </div>
+      </article>
+
+      <article class="phone">
+        <div class="status"><span>9:41</span><span>微信</span></div>
+        <div class="screen-title">
+          <strong>扫码核销</strong>
+          <span>商家端</span>
+        </div>
+        <div class="content">
+          <div class="scan-box">
+            <div>
+              <div class="scan-mark">+</div>
+              <p>扫用户电子券二维码</p>
+            </div>
+          </div>
+
+          <div class="confirm-card">
+            <h3>待确认核销</h3>
+            <div class="row">
+              <span class="muted">套餐</span>
+              <strong>单人洗浴票</strong>
+            </div>
+            <div class="row">
+              <span class="muted">券状态</span>
+              <span class="badge">可核销</span>
+            </div>
+            <div class="row">
+              <span class="muted">有效期</span>
+              <strong>2026-07-28</strong>
+            </div>
+            <div class="row">
+              <span class="muted">券号</span>
+              <strong>0018</strong>
+            </div>
+            <button class="btn">确认核销</button>
+            <button class="btn secondary">取消</button>
+          </div>
+
+          <div class="check-list">
+            <div class="check-item">失败状态示例：已使用、已过期、已退款、动态码过期、店员无权限。</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="phone">
+        <div class="status"><span>9:41</span><span>微信</span></div>
+        <div class="screen-title">
+          <strong>今日核销</strong>
+          <span>商家端</span>
+        </div>
+        <div class="content">
+          <div class="confirm-card" style="text-align: center;">
+            <div class="success">✓</div>
+            <h3>核销成功</h3>
+            <p class="muted">单人洗浴票 · 店员小王 · 19:36</p>
+          </div>
+
+          <div class="check-list">
+            <div class="check-item">
+              <strong>今日概览</strong><br>
+              核销 18 张 · 退款券拦截 1 次 · 重复扫码拦截 2 次
+            </div>
+          </div>
+
+          <div class="records">
+            <div class="record">
+              <strong>19:36 单人洗浴票</strong>
+              <p class="muted">券号 QY202606280018 · 核销成功</p>
+            </div>
+            <div class="record">
+              <strong>18:52 洗浴 + 搓澡套餐</strong>
+              <p class="muted">券号 QY202606280015 · 核销成功</p>
+            </div>
+            <div class="record">
+              <strong>18:31 单人洗浴票</strong>
+              <p class="muted">券号 QY202606280011 · 失败：已使用</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="flow" aria-label="MVP 流程">
+      <div><strong>1. 选套餐</strong>套餐规则、有效期、退款说明前置展示。</div>
+      <div><strong>2. 创建订单</strong>云函数读取真实价格，避免前端改价。</div>
+      <div><strong>3. 微信支付</strong>支付成功后等待微信回调确认。</div>
+      <div><strong>4. 自动发券</strong>回调幂等处理，避免重复发券。</div>
+      <div><strong>5. 动态核销码</strong>短期有效，降低截图转发风险。</div>
+      <div><strong>6. 店员确认</strong>扫码后先确认套餐，再执行核销。</div>
+    </section>
+  </main>
+</body>
+</html>

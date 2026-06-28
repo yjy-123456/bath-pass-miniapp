@@ -1,0 +1,26 @@
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-bottom: 22rpx;
+  overflow: hidden;
+  border: 1rpx solid rgba(31, 41, 51, 0.1);
+  border-radius: 14rpx;
+  background: #ffffff;
+}
+
+.tabs view {
+  padding: 20rpx 6rpx;
+  color: #66717f;
+  text-align: center;
+  font-size: 24rpx;
+}
+
+.tabs .active {
+  background: #2f6f73;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.coupon .btn {
+  margin-top: 24rpx;
+}

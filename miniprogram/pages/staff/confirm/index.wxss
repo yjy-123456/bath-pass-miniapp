@@ -1,0 +1,13 @@
+.info-row {
+  min-height: 76rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24rpx;
+  border-bottom: 1rpx solid rgba(31, 41, 51, 0.08);
+  font-size: 28rpx;
+}
+
+.info-row:last-of-type {
+  border-bottom: 0;
+}

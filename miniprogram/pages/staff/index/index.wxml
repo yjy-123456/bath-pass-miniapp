@@ -1,0 +1,21 @@
+<view class="page">
+  <view wx:if="{{!isStaff}}" class="card denied">
+    <view class="title">暂无店员权限</view>
+    <view class="subtle">请先在首页点击“初始化 Demo 数据”，当前微信 openid 会加入店员白名单。</view>
+    <button class="btn" bindtap="seedDemo">初始化并授权当前账号</button>
+  </view>
+
+  <block wx:else>
+    <view class="scan-box" bindtap="scanCode">
+      <view class="scan-mark">+</view>
+      <view>扫用户电子券二维码</view>
+    </view>
+
+    <view class="card manual">
+      <view class="title">手动输入核销码</view>
+      <input class="input" placeholder="可粘贴 BATHPASS: 开头的动态码" value="{{token}}" bindinput="onTokenInput" />
+      <button class="btn" bindtap="checkToken">查询并确认</button>
+      <button class="btn secondary" bindtap="goRecords">今日核销记录</button>
+    </view>
+  </block>
+</view>
