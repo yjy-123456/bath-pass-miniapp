@@ -2,7 +2,10 @@ App({
   globalData: {
     envId: 'cloud1-d8gn5w1ole6a44089',
     openid: '',
+    user: null,
+    hasPhone: false,
     isStaff: false,
+    staff: null,
     store: null,
   },
 
@@ -21,6 +24,16 @@ App({
       throw new Error(result.result.message || '操作失败');
     }
     return result.result;
+  },
+
+  async refreshProfile() {
+    const profile = await this.callFunction('getProfile');
+    this.globalData.openid = profile.openid;
+    this.globalData.user = profile.user;
+    this.globalData.hasPhone = profile.hasPhone;
+    this.globalData.isStaff = profile.isStaff;
+    this.globalData.staff = profile.staff;
+    return profile;
   },
 
   formatFen(fen) {

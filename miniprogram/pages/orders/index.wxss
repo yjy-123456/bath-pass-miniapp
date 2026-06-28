@@ -1,0 +1,13 @@
+.order .title {
+  font-size: 31rpx;
+}
+
+.meta {
+  margin-top: 20rpx;
+  padding-top: 18rpx;
+  display: grid;
+  gap: 10rpx;
+  border-top: 1rpx solid rgba(31, 41, 51, 0.08);
+  color: #4b5563;
+  font-size: 25rpx;
+}

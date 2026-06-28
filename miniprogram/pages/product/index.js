@@ -6,6 +6,8 @@ Page({
     product: null,
     quantity: 1,
     totalText: '¥0',
+    needPhone: false,
+    bindingPhone: false,
   },
 
   onLoad(options) {
@@ -42,6 +44,38 @@ Page({
 
   async buyNow() {
     try {
+      const profile = await app.refreshProfile();
+      if (!profile.hasPhone) {
+        this.setData({ needPhone: true });
+        return;
+      }
+      await this.createOrderAndPay();
+    } catch (error) {
+      wx.showToast({ title: error.message || '下单失败', icon: 'none' });
+    }
+  },
+
+  async bindPhoneAndBuy(event) {
+    const { code, errMsg } = event.detail || {};
+    if (!code) {
+      const denied = errMsg && errMsg.includes('deny');
+      wx.showToast({ title: denied ? '购买前需绑定手机号' : '手机号授权已取消', icon: 'none' });
+      return;
+    }
+
+    try {
+      this.setData({ bindingPhone: true });
+      await app.callFunction('bindPhoneNumber', { code });
+      this.setData({ needPhone: false, bindingPhone: false });
+      await this.createOrderAndPay();
+    } catch (error) {
+      this.setData({ bindingPhone: false });
+      wx.showToast({ title: error.message || '手机号绑定失败', icon: 'none' });
+    }
+  },
+
+  async createOrderAndPay() {
+    try {
       wx.showLoading({ title: '创建订单' });
       const orderResult = await app.callFunction('createOrder', {
         productId: this.data.productId,
@@ -51,6 +85,10 @@ Page({
       wx.navigateTo({ url: `/pages/pay-result/index?orderId=${orderResult.orderId}` });
     } catch (error) {
       wx.hideLoading();
+      if (error.message && error.message.includes('手机号')) {
+        this.setData({ needPhone: true });
+        return;
+      }
       wx.showToast({ title: error.message || '下单失败', icon: 'none' });
     }
   },

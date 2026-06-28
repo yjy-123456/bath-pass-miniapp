@@ -49,18 +49,8 @@ exports.main = async () => {
     updatedAt: now,
   });
 
-  await upsertById('staff', OPENID, {
-    openid: OPENID,
-    name: 'Demo 店员',
-    role: 'admin',
-    status: 'active',
-    createdAt: now,
-    updatedAt: now,
-  });
-
   return ok({
-    message: 'Demo 数据已初始化，当前微信 openid 已加入店员白名单。',
-    staffOpenid: OPENID,
+    message: 'Demo 数据已初始化，请在我的页或数据库中设置店员账号。',
     productCount: demoProducts.length,
   });
 };

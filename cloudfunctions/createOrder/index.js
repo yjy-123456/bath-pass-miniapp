@@ -1,5 +1,5 @@
-const { cloud, db, fail, getById, ok } = require('./_shared/db');
-const { computeOrderTotal, makeOrderNo, snapshotProduct } = require('./_shared/package');
+const { cloud, db, fail, findOne, getById, ok } = require('./_shared/db');
+const { computeOrderTotal, createContactSnapshot, makeOrderNo, snapshotProduct } = require('./_shared/package');
 
 exports.main = async (event) => {
   const { OPENID } = cloud.getWXContext();
@@ -15,8 +15,14 @@ exports.main = async (event) => {
     return fail('套餐不存在或已下架', 'PRODUCT_UNAVAILABLE');
   }
 
+  const user = await findOne('users', { openid: OPENID });
+  if (!user || !user.phoneNumber) {
+    return fail('购买前需绑定手机号', 'PHONE_REQUIRED');
+  }
+
   const now = new Date();
   const totalFeeFen = computeOrderTotal(product, qty);
+  const contactSnapshot = createContactSnapshot(user.phoneNumber);
   const order = {
     orderNo: makeOrderNo(now),
     openid: OPENID,
@@ -24,6 +30,7 @@ exports.main = async (event) => {
     productSnapshot: snapshotProduct(product),
     quantity: qty,
     totalFeeFen,
+    ...contactSnapshot,
     status: 'pending',
     payMode: 'mock',
     paidAt: null,

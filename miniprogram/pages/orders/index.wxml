@@ -1,0 +1,21 @@
+<view class="page">
+  <view wx:if="{{orders.length}}" class="stack">
+    <view class="card order" wx:for="{{orders}}" wx:key="_id">
+      <view class="row">
+        <view>
+          <view class="title">{{item.productSnapshot.name}}</view>
+          <view class="subtle">订单号 {{item.orderNo}}</view>
+          <view class="subtle">下单时间 {{item.createdAtText}}</view>
+        </view>
+        <text class="badge">{{item.statusText}}</text>
+      </view>
+      <view class="meta">
+        <view>数量：{{item.quantity}}</view>
+        <view>合计：{{item.totalText}}</view>
+        <view>手机号：{{item.contactPhoneMaskedSnapshot || '-'}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:else class="empty">暂无订单</view>
+</view>

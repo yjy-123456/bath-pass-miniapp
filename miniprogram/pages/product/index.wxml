@@ -34,6 +34,11 @@
       <text>合计</text>
       <text class="price">{{totalText}}</text>
     </view>
-    <button class="btn" bindtap="buyNow">模拟下单并支付</button>
+    <view wx:if="{{needPhone}}" class="phone-panel">
+      <view class="section-title">绑定手机号</view>
+      <view class="subtle">购买电子券需绑定手机号，便于门店核对订单和售后联系。</view>
+      <button class="btn" loading="{{bindingPhone}}" open-type="getPhoneNumber" bindgetphonenumber="bindPhoneAndBuy">授权手机号并继续</button>
+    </view>
+    <button wx:else class="btn" bindtap="buyNow">模拟下单并支付</button>
   </view>
 </view>

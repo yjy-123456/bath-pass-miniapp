@@ -26,6 +26,7 @@ exports.main = async (event) => {
     codeId: code._id,
     token,
     coupon,
+    contactPhoneMaskedSnapshot: coupon.contactPhoneMaskedSnapshot || '',
     canRedeem: true,
     message: '可核销',
   });
