@@ -1,60 +1,60 @@
-# User Phone Binding And Role Separation Design
+# 用户手机号绑定与角色分离设计
 
-## Goal
+## 目标
 
-Add a realistic user identity layer for the bath pass mini program:
+为澡堂电子券小程序增加更接近真实经营的用户身份层：
 
-- Users are identified by WeChat `openid`.
-- Users must bind a phone number once before buying.
-- Users can rebind phone number from a new "我的" page.
-- Staff/admin permissions remain controlled by the `staff` collection.
-- Staff can contact users through phone snapshots on orders and coupons.
-- The merchant workspace is visible only to staff/admin users.
+- 用户使用微信 `openid` 作为系统主身份。
+- 用户购买前必须先绑定一次手机号。
+- 用户可以在新的“我的”页面换绑手机号。
+- 店员和管理员权限仍由 `staff` 集合控制。
+- 商家可以通过订单和券上的手机号快照联系用户。
+- 商家工作台只对店员和管理员显示。
 
-## Current State
+## 当前状态
 
-The current Demo has a working bath pass flow:
+当前 Demo 已经跑通澡堂电子券主流程：
 
-- `login` creates or updates a `users` record with `openid`.
-- `staff` collection controls merchant permissions.
-- `seedDemoData` initializes products, store settings, and currently adds the caller as staff.
-- Bottom tabs are `套餐 / 我的券 / 商家`.
-- Purchase flow does not require phone binding.
-- Orders and coupons do not store contact phone snapshots.
+- `login` 云函数会按 `openid` 创建或更新 `users` 记录。
+- `staff` 集合控制商家端权限。
+- `seedDemoData` 会初始化套餐、门店配置，并且目前会把调用者加入店员白名单。
+- 底部 tab 是 `套餐 / 我的券 / 商家`。
+- 购买流程不要求绑定手机号。
+- 订单和券没有保存用户手机号快照。
 
-The main gap is that user and merchant identities are too Demo-like. A regular user can see a merchant tab, and the Demo initializer can make the current user staff. The system also cannot support merchant-to-user contact yet.
+当前主要问题是用户身份和商家身份仍偏 Demo 化。普通用户也能看到“商家”tab，初始化 Demo 数据也会顺手把当前用户设为店员；同时系统还不能支持商家联系用户。
 
-## Recommended Scope
+## 推荐范围
 
-Implement the "Demo realistic" version:
+本阶段实现“Demo 真实化版”：
 
-- Require phone binding before purchase.
-- Add a "我的" page.
-- Move merchant entry into "我的", visible only to staff/admin users.
-- Let users rebind phone number from "我的".
-- Store phone snapshots on orders and coupons.
-- Show masked user phone in merchant-facing order/coupon surfaces.
-- Keep staff assignment in the database or a separate Demo-only staff setup function.
+- 购买前强制绑定手机号。
+- 新增“我的”页面。
+- 将商家入口移到“我的”页，并且只对店员或管理员显示。
+- 用户可以在“我的”页换绑手机号。
+- 订单和券保存手机号快照。
+- 商家侧订单、券、核销页面展示脱敏手机号。
+- 店员身份通过数据库或单独的 Demo 店员设置函数配置，不再混入 `seedDemoData`。
 
-Do not implement SMS, member marketing, refund workflows, or a full staff management console in this phase.
+本阶段不实现短信通知、会员营销、退款流程、完整店员管理后台。
 
-## Identity Model
+## 身份模型
 
-`openid` remains the primary user identity.
+`openid` 仍然是系统里的用户主身份。
 
-`phoneNumber` is contact information. It must not be used as the primary key for ownership or permissions because users can change phone numbers while keeping the same WeChat account.
+`phoneNumber` 是联系方式。用户可能更换手机号，但仍使用同一个微信账号，所以手机号不能作为券归属或权限判断的主键。
 
-`staff.openid` controls staff/admin permissions.
+`staff.openid` 控制店员和管理员权限。
 
-### User Fields
+### 用户字段
 
-`users`:
+`users`：
 
 - `_id`
 - `openid`
 - `nickname`
 - `avatarUrl`
-- `role`: `user`
+- `role`：`user`
 - `phoneNumber`
 - `phoneNumberMasked`
 - `phoneBoundAt`
@@ -63,66 +63,66 @@ Do not implement SMS, member marketing, refund workflows, or a full staff manage
 - `lastLoginAt`
 - `updatedAt`
 
-### Staff Fields
+### 店员字段
 
-`staff`:
+`staff`：
 
 - `_id`
 - `openid`
 - `name`
-- `role`: `staff` or `admin`
-- `status`: `active` or `disabled`
+- `role`：`staff` 或 `admin`
+- `status`：`active` 或 `disabled`
 - `createdAt`
 - `updatedAt`
 
-### Order Phone Snapshot
+### 订单手机号快照
 
-`orders` adds:
-
-- `contactPhoneSnapshot`
-- `contactPhoneMaskedSnapshot`
-
-The snapshot records the phone at purchase time. If the user later rebinds phone, historical orders still show the phone used when the order was created.
-
-### Coupon Phone Snapshot
-
-`coupons` adds:
+`orders` 新增：
 
 - `contactPhoneSnapshot`
 - `contactPhoneMaskedSnapshot`
 
-This lets merchant-side coupon lookup and redeem confirmation show contact context without joining `users` for every display.
+快照记录用户下单时的手机号。如果用户后续换绑手机号，历史订单仍保留下单当时的联系方式，便于售后追溯。
 
-## Phone Binding Flow
+### 券手机号快照
 
-Phone binding uses the WeChat phone-number capability:
+`coupons` 新增：
 
-1. The mini program renders a button with `open-type="getPhoneNumber"`.
-2. WeChat returns a one-time `code` after user consent.
-3. The mini program calls cloud function `bindPhoneNumber` with that `code`.
-4. The cloud function exchanges the code for the phone number with `cloud.openapi.phonenumber.getPhoneNumber({ code })`.
-5. The cloud function updates the current `users` record by `openid`.
-6. The function returns the masked phone and binding status.
+- `contactPhoneSnapshot`
+- `contactPhoneMaskedSnapshot`
 
-The UI text should explain the purpose:
+这样商家侧查券和核销确认时可以直接展示联系信息上下文，不必每次再关联查询 `users`。
+
+## 手机号绑定流程
+
+手机号绑定使用微信小程序手机号能力：
+
+1. 小程序渲染 `open-type="getPhoneNumber"` 的按钮。
+2. 用户同意后，微信返回一次性 `code`。
+3. 小程序调用 `bindPhoneNumber` 云函数，并传入该 `code`。
+4. 云函数调用 `cloud.openapi.phonenumber.getPhoneNumber({ code })` 换取手机号。
+5. 云函数按当前 `openid` 更新 `users` 记录。
+6. 云函数返回脱敏手机号和绑定状态。
+
+授权前的页面文案应说明用途：
 
 > 购买电子券需绑定手机号，便于门店核对订单和售后联系。
 
-If the user refuses authorization, purchase stops and no order is created.
+如果用户拒绝授权，购买流程停止，不创建订单。
 
-## Purchase Flow
+## 购买流程
 
-On product detail page:
+在套餐详情页：
 
-1. User taps `模拟下单并支付`.
-2. Page calls `getProfile` or uses cached login state.
-3. If `hasPhone` is false, show a phone binding panel.
-4. User authorizes phone.
-5. Page calls `bindPhoneNumber`.
-6. Page calls `createOrder`.
-7. Page navigates to mock payment result.
+1. 用户点击 `模拟下单并支付`。
+2. 页面调用 `getProfile`，或使用缓存的登录状态。
+3. 如果 `hasPhone` 为 false，展示手机号绑定面板。
+4. 用户授权手机号。
+5. 页面调用 `bindPhoneNumber`。
+6. 页面调用 `createOrder`。
+7. 页面跳转到模拟支付结果页。
 
-`createOrder` must also enforce phone binding server-side. If `users.phoneNumber` is missing, it returns an error:
+`createOrder` 必须在服务端再次校验手机号是否已绑定。如果 `users.phoneNumber` 缺失，返回：
 
 ```json
 {
@@ -132,231 +132,232 @@ On product detail page:
 }
 ```
 
-This prevents bypassing the front-end check.
+这样可以防止绕过前端校验直接创建订单。
 
-## My Page
+## 我的页面
 
-Change tabBar from:
+底部 tab 从：
 
 ```text
 套餐 / 我的券 / 商家
 ```
 
-to:
+改为：
 
 ```text
 套餐 / 我的券 / 我的
 ```
 
-The "我的" page includes:
+“我的”页面包含：
 
-- Current identity: `普通用户`, `店员`, or `管理员`.
-- Phone status: `未绑定` or masked phone such as `138****0000`.
-- `绑定手机号` or `换绑手机号` button.
-- `我的订单` entry.
-- `我的券` entry.
-- `联系商家` action using `settings.store.phone`.
-- `商家工作台` entry only when `isStaff` is true.
-- Developer-only `openid` display for Demo testing.
+- 当前身份：`普通用户`、`店员` 或 `管理员`。
+- 手机号状态：`未绑定` 或脱敏手机号，例如 `138****0000`。
+- `绑定手机号` 或 `换绑手机号` 按钮。
+- `我的订单` 入口。
+- `我的券` 入口。
+- `联系商家` 操作，拨打 `settings.store.phone`。
+- `商家工作台` 入口，仅 `isStaff` 为 true 时显示。
+- Demo 调试用 `openid` 展示，上线前隐藏。
 
-The merchant tab disappears from bottom navigation for regular users. Staff still reach merchant tools through the "我的" page.
+普通用户不再在底部看到“商家”tab。店员仍然可以从“我的”页进入商家工具。
 
-## Merchant Workspace
+## 商家工作台
 
-Keep existing merchant pages:
+保留现有商家页面：
 
-- Scan redeem code.
-- Confirm redeem.
-- Today's redeem records.
+- 扫码核销。
+- 核销确认。
+- 今日核销记录。
 
-Add a merchant order/coupon lookup page:
+新增商家订单/券查询页：
 
-- Search by full phone number or phone suffix.
-- List recent orders/coupons.
-- Show product name, coupon status, coupon number suffix, masked phone, and create time.
-- Staff can tap a result to inspect basic details.
+- 支持按完整手机号或手机号后几位搜索。
+- 展示最近订单和券。
+- 展示套餐名、券状态、券号后缀、脱敏手机号、创建时间。
+- 店员可以点击一条记录查看基础详情。
 
-The lookup cloud function must require staff permission.
+查询云函数必须校验店员权限。
 
-## Redeem Confirmation
+## 核销确认
 
-Add masked phone context to redeem confirmation:
+核销确认页增加用户手机号上下文：
 
-- Product name.
-- Coupon status.
-- Validity date.
-- Coupon number suffix.
-- User phone suffix or masked phone.
-- Confirm redeem button.
-- Cancel button.
+- 套餐名。
+- 券状态。
+- 有效期。
+- 券号后 4 位。
+- 用户手机号后 4 位或脱敏手机号。
+- 确认核销按钮。
+- 取消按钮。
 
-The page should not emphasize full phone number during fast scan confirmation. Full phone can be available in merchant lookup if needed.
+快速核销确认页不应突出展示完整手机号。完整手机号如有必要，可以放到商家订单/券查询详情页。
 
-## Cloud Functions
+## 云函数
 
-### New Functions
+### 新增云函数
 
 `getProfile`
 
-- Returns current `user`, `isStaff`, and `staff`.
-- Creates the user if missing.
-- Replaces repeated direct use of `login` in pages where full profile is needed.
+- 返回当前 `user`、`isStaff` 和 `staff`。
+- 如果用户不存在，则创建用户。
+- 页面需要完整身份信息时优先使用它。
 
 `bindPhoneNumber`
 
-- Accepts WeChat phone auth `code`.
-- Calls `cloud.openapi.phonenumber.getPhoneNumber({ code })` in the cloud function.
-- Updates `users.phoneNumber`, `phoneNumberMasked`, `phoneBoundAt`, `phoneUpdatedAt`, and `updatedAt`.
-- Returns masked phone and `hasPhone`.
+- 接收微信手机号授权 `code`。
+- 在云函数中调用 `cloud.openapi.phonenumber.getPhoneNumber({ code })`。
+- 更新 `users.phoneNumber`、`phoneNumberMasked`、`phoneBoundAt`、`phoneUpdatedAt` 和 `updatedAt`。
+- 返回脱敏手机号和 `hasPhone`。
 
 `getMyOrders`
 
-- Returns current user's orders.
-- Includes product snapshot, status, quantity, total, created time, and phone snapshot.
+- 返回当前用户订单。
+- 包含套餐快照、订单状态、数量、总价、创建时间和手机号快照。
 
 `searchMerchantCoupons`
 
-- Requires staff.
-- Accepts `phoneKeyword`, `status`, and pagination fields.
-- Searches orders/coupons by phone snapshot or suffix.
-- Returns merchant-facing list items.
+- 需要店员权限。
+- 接收 `phoneKeyword`、`status` 和分页参数。
+- 按手机号快照或手机号后缀搜索订单/券。
+- 返回商家侧列表项。
 
 `setCurrentUserAsDemoStaff`
 
-- Demo-only convenience function.
-- Adds the current `openid` to `staff` with a clearly marked name.
-- Used for development testing instead of mixing staff setup into `seedDemoData`.
+- 仅用于 Demo 测试。
+- 将当前 `openid` 加入 `staff`，并使用明确的 Demo 名称。
+- 用于开发测试，避免把店员设置混入 `seedDemoData`。
 
-### Changed Functions
+### 调整云函数
 
 `login`
 
-- Can stay for compatibility, but should return `user`, `hasPhone`, `isStaff`, and `staff`.
-- It should not be the only source of profile truth if `getProfile` is added.
+- 可以保留兼容现有页面。
+- 返回 `user`、`hasPhone`、`isStaff` 和 `staff`。
+- 如果新增 `getProfile`，后续页面应逐步改用 `getProfile` 获取完整身份。
 
 `seedDemoData`
 
-- Creates collections, products, and settings.
-- Does not add the current user to `staff`.
+- 创建集合、套餐和门店配置。
+- 不再把当前用户加入 `staff`。
 
 `createOrder`
 
-- Fetches current user.
-- Requires `users.phoneNumber`.
-- Adds phone snapshots to order.
+- 查询当前用户。
+- 要求 `users.phoneNumber` 已存在。
+- 创建订单时写入手机号快照。
 
 `mockPayOrder`
 
-- Copies order phone snapshot into coupon drafts.
+- 发券时将订单手机号快照复制到券上。
 
 `checkRedeemCode`
 
-- Returns masked phone context on the coupon.
+- 返回券上的脱敏手机号上下文。
 
 `redeemCoupon`
 
-- Keeps current staff permission behavior.
-- Redeem logs can include `contactPhoneMaskedSnapshot` for merchant review.
+- 保持当前店员权限校验。
+- 核销日志可以记录 `contactPhoneMaskedSnapshot`，便于商家复盘。
 
-## Data Privacy
+## 数据隐私
 
-Phone number is personal information. The mini program should collect it only when needed and explain the purpose before requesting authorization.
+手机号属于个人信息。小程序应在必要场景收集手机号，并在授权前说明用途。
 
-Display rules:
+展示规则：
 
-- User's own "我的" page can show masked phone.
-- Staff lookup can show masked phone by default.
-- Full phone display should be limited to explicit merchant order detail or contact action.
-- Phone number must not be used as a permission key.
+- 用户自己的“我的”页展示脱敏手机号。
+- 商家查询默认展示脱敏手机号。
+- 完整手机号只在明确的商家订单详情或联系操作中使用。
+- 手机号不能作为权限判断依据。
 
-Before public release, the mini program privacy policy should mention phone collection for order verification, merchant contact, and after-sales service.
+正式发布前，小程序隐私政策需要说明收集手机号用于订单核对、商家联系和售后服务。
 
-## Error Handling
+## 错误处理
 
-Phone binding errors:
+手机号绑定错误：
 
-- User refuses authorization: show `购买前需绑定手机号，便于门店核对订单和售后联系。`
-- WeChat code invalid/expired: show `手机号授权已过期，请重新授权。`
-- Cloud exchange fails: show `手机号绑定失败，请稍后重试。`
+- 用户拒绝授权：提示 `购买前需绑定手机号，便于门店核对订单和售后联系。`
+- 微信 code 失效：提示 `手机号授权已过期，请重新授权。`
+- 云函数换取手机号失败：提示 `手机号绑定失败，请稍后重试。`
 
-Purchase errors:
+购买错误：
 
-- Missing phone: show phone binding panel.
-- Product unavailable: show existing product unavailable message.
-- Order creation failure: keep user on detail page and show toast.
+- 缺少手机号：展示手机号绑定面板。
+- 套餐不可用：展示现有套餐不可用提示。
+- 创建订单失败：留在详情页并显示 toast。
 
-Staff errors:
+店员错误：
 
-- Non-staff entering merchant workspace: show no-permission page.
-- Staff disabled after opening page: cloud functions still reject scan/lookup/redeem.
+- 非店员进入商家工作台：展示无权限页面。
+- 店员打开页面后被禁用：云函数仍然拒绝扫码、查询和核销。
 
-## Testing Strategy
+## 测试策略
 
-Use at least two WeChat accounts.
+至少使用两个微信账号测试。
 
-### User Account A
+### 用户账号 A
 
-1. Open mini program.
-2. Browse products without phone binding.
-3. Open product detail.
-4. Tap mock purchase.
-5. Confirm phone authorization.
-6. Complete mock payment.
-7. Verify coupon appears in "我的券".
-8. Open "我的" and verify masked phone appears.
-9. Rebind phone from "我的" if a second phone authorization is available.
+1. 打开小程序。
+2. 未绑定手机号时浏览套餐。
+3. 进入套餐详情。
+4. 点击模拟购买。
+5. 授权手机号。
+6. 完成模拟支付。
+7. 确认电子券出现在“我的券”。
+8. 打开“我的”，确认展示脱敏手机号。
+9. 如果有第二次手机号授权条件，从“我的”页换绑手机号。
 
-### Staff Account B
+### 店员账号 B
 
-1. Open mini program once to create a user record.
-2. Add B to `staff`, or call `setCurrentUserAsDemoStaff` in the Demo environment.
-3. Open "我的".
-4. Verify "商家工作台" appears.
-5. Scan A's coupon QR code.
-6. Verify redeem confirmation shows phone context.
-7. Redeem coupon.
-8. Verify today's redeem records.
-9. Search by A's phone suffix in merchant lookup.
+1. 打开小程序一次，确保创建了用户记录。
+2. 将 B 加入 `staff`，或在 Demo 环境调用 `setCurrentUserAsDemoStaff`。
+3. 打开“我的”。
+4. 确认出现“商家工作台”。
+5. 扫描 A 的券二维码。
+6. 确认核销确认页展示手机号上下文。
+7. 核销该券。
+8. 确认今日核销记录显示成功记录。
+9. 在商家查询页用 A 的手机号后缀搜索订单/券。
 
-### Negative Cases
+### 反向测试
 
-- User refuses phone authorization and cannot create order.
-- User without staff permission cannot use merchant functions.
-- Used coupon cannot be redeemed again.
-- Expired dynamic code cannot be redeemed.
-- Historical order keeps old phone snapshot after phone rebind.
+- 用户拒绝手机号授权时不能创建订单。
+- 非店员不能使用商家云函数。
+- 已使用券不能重复核销。
+- 过期动态码不能核销。
+- 用户换绑手机号后，历史订单仍保留旧手机号快照。
 
-## Implementation Phases
+## 实施阶段
 
-Phase 1: Profile and phone binding
+第一阶段：用户资料与手机号绑定
 
-- Add profile fields.
-- Add `getProfile`.
-- Add `bindPhoneNumber`.
-- Add front-end phone binding panel.
+- 增加用户资料字段。
+- 新增 `getProfile`。
+- 新增 `bindPhoneNumber`。
+- 增加前端手机号绑定面板。
 
-Phase 2: My page and navigation
+第二阶段：我的页与导航
 
-- Add "我的" page.
-- Change tabBar.
-- Move merchant entry into "我的".
-- Add store contact action.
+- 新增“我的”页。
+- 修改 tabBar。
+- 将商家入口移入“我的”。
+- 增加联系商家操作。
 
-Phase 3: Purchase enforcement and snapshots
+第三阶段：购买强制校验与手机号快照
 
-- Enforce phone binding in `createOrder`.
-- Add order and coupon phone snapshots.
-- Add `getMyOrders`.
+- `createOrder` 强制要求手机号。
+- 订单和券写入手机号快照。
+- 新增 `getMyOrders`。
 
-Phase 4: Merchant improvements
+第四阶段：商家侧增强
 
-- Update redeem confirmation with masked phone.
-- Add merchant coupon/order search.
-- Add Demo-only staff setup function.
-- Remove staff assignment from `seedDemoData`.
+- 核销确认页展示脱敏手机号。
+- 增加商家订单/券查询。
+- 增加 Demo 专用店员设置函数。
+- 从 `seedDemoData` 移除自动授权店员逻辑。
 
-Phase 5: Verification
+第五阶段：验证
 
-- Update tests for phone-required purchase and masking.
-- Update structure checks for new pages/functions.
-- Update README with two-account testing flow.
+- 增加手机号必填购买和手机号脱敏测试。
+- 更新结构检查，覆盖新增页面和云函数。
+- 更新 README，加入双账号测试流程。
