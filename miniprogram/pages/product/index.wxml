@@ -1,7 +1,7 @@
-<view class="page" wx:if="{{product}}">
-  <view class="card">
-    <view class="row">
-      <view>
+<view class="page product-page" wx:if="{{product}}">
+  <view class="card product-summary fade-up">
+    <view class="row product-head">
+      <view class="product-copy">
         <view class="title">{{product.name}}</view>
         <view class="subtle">{{product.description}}</view>
       </view>
@@ -12,22 +12,28 @@
 
   <view class="card section">
     <view class="section-title">套餐包含</view>
-    <view class="line" wx:for="{{product.includes}}" wx:key="*this">{{item}}</view>
+    <view class="line" wx:for="{{product.includes}}" wx:key="*this">
+      <image class="icon" src="/assets/icons/check.svg" mode="aspectFit"></image>
+      <text>{{item}}</text>
+    </view>
   </view>
 
   <view class="card section">
     <view class="section-title">使用规则</view>
-    <view class="line" wx:for="{{product.rules}}" wx:key="*this">{{item}}</view>
+    <view class="line" wx:for="{{product.rules}}" wx:key="*this">
+      <image class="icon" src="/assets/icons/check.svg" mode="aspectFit"></image>
+      <text>{{item}}</text>
+    </view>
     <view class="notice small">{{product.refundRule}}</view>
   </view>
 
-  <view class="card section">
+  <view class="card section purchase-card">
     <view class="row">
       <text class="subtle">购买数量</text>
       <view class="stepper">
-        <button bindtap="decrease">-</button>
+        <button hover-class="btn-hover" bindtap="decrease">-</button>
         <text>{{quantity}}</text>
-        <button bindtap="increase">+</button>
+        <button hover-class="btn-hover" bindtap="increase">+</button>
       </view>
     </view>
     <view class="row total">
@@ -37,15 +43,15 @@
     <view wx:if="{{needPhone}}" class="phone-panel">
       <view class="section-title">绑定手机号</view>
       <view class="subtle">购买电子券需绑定手机号，便于门店核对订单和售后联系。</view>
-      <button class="btn" loading="{{bindingPhone}}" open-type="getPhoneNumber" bindgetphonenumber="bindPhoneAndBuy">授权手机号并继续</button>
+      <button class="btn" hover-class="btn-hover" loading="{{bindingPhone}}" open-type="getPhoneNumber" bindgetphonenumber="bindPhoneAndBuy">授权手机号并继续</button>
       <view class="demo-phone">
         <view class="subtle">Demo 阶段如无法使用微信手机号授权，可手动输入测试手机号。</view>
         <view class="demo-bind-row">
           <input class="phone-input" type="number" maxlength="11" placeholder="输入测试手机号" value="{{demoPhoneNumber}}" bindinput="onDemoPhoneInput" />
-          <button class="mini-btn" loading="{{bindingPhone}}" bindtap="bindDemoPhoneAndBuy">继续</button>
+          <button class="mini-btn" hover-class="btn-hover" loading="{{bindingPhone}}" bindtap="bindDemoPhoneAndBuy">继续</button>
         </view>
       </view>
     </view>
-    <button wx:else class="btn" bindtap="buyNow">模拟下单并支付</button>
+    <button wx:else class="btn" hover-class="btn-hover" bindtap="buyNow">模拟下单并支付</button>
   </view>
 </view>

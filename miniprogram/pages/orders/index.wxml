@@ -1,8 +1,8 @@
-<view class="page">
+<view class="page orders-page">
   <view wx:if="{{orders.length}}" class="stack">
-    <view class="card order" wx:for="{{orders}}" wx:key="_id">
-      <view class="row">
-        <view>
+    <view class="card order fade-up" wx:for="{{orders}}" wx:key="_id">
+      <view class="row order-head">
+        <view class="order-copy">
           <view class="title">{{item.productSnapshot.name}}</view>
           <view class="subtle">订单号 {{item.orderNo}}</view>
           <view class="subtle">下单时间 {{item.createdAtText}}</view>
@@ -10,12 +10,18 @@
         <text class="badge">{{item.statusText}}</text>
       </view>
       <view class="meta">
-        <view>数量：{{item.quantity}}</view>
-        <view>合计：{{item.totalText}}</view>
-        <view>手机号：{{item.contactPhoneMaskedSnapshot || '-'}}</view>
+        <view class="meta-label">数量</view>
+        <view class="meta-value">{{item.quantity}}</view>
+        <view class="meta-label">合计</view>
+        <view class="meta-value price-text">{{item.totalText}}</view>
+        <view class="meta-label">手机号</view>
+        <view class="meta-value">{{item.contactPhoneMaskedSnapshot || '-'}}</view>
       </view>
     </view>
   </view>
 
-  <view wx:else class="empty">暂无订单</view>
+  <view wx:else class="empty">
+    <image class="empty-icon" src="/assets/icons/order.svg" mode="aspectFit"></image>
+    <view>暂无订单</view>
+  </view>
 </view>

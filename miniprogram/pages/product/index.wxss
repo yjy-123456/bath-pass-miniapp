@@ -1,3 +1,19 @@
+.product-summary {
+  overflow: hidden;
+  border-color: rgba(184, 115, 51, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 247, 237, 0.92), rgba(255, 255, 255, 0.96)),
+    #ffffff;
+}
+
+.product-head {
+  align-items: flex-start;
+}
+
+.product-copy {
+  min-width: 0;
+}
+
 .section {
   margin-top: 20rpx;
 }
@@ -5,7 +21,7 @@
 .section-title {
   margin-bottom: 14rpx;
   font-size: 30rpx;
-  font-weight: 800;
+  font-weight: 850;
 }
 
 .detail,
@@ -16,24 +32,61 @@
   line-height: 1.55;
 }
 
+.detail {
+  padding-top: 20rpx;
+  border-top: 1rpx solid rgba(31, 41, 51, 0.08);
+}
+
+.line {
+  display: flex;
+  align-items: flex-start;
+  gap: 14rpx;
+}
+
+.line text {
+  flex: 1;
+  min-width: 0;
+}
+
+.line .icon {
+  margin-top: 2rpx;
+}
+
 .small {
   margin-bottom: 0;
   font-size: 23rpx;
 }
 
+.purchase-card {
+  border-color: rgba(47, 111, 115, 0.12);
+}
+
 .stepper {
   display: flex;
   align-items: center;
-  gap: 22rpx;
+  gap: 20rpx;
 }
 
 .stepper button {
-  width: 58rpx;
-  height: 58rpx;
-  border-radius: 12rpx;
-  background: #edf6f4;
-  color: #2f6f73;
+  width: 64rpx;
+  min-width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16rpx;
+  background: #e6f3ef;
+  color: #25635f;
   font-size: 34rpx;
+  font-weight: 850;
+}
+
+.stepper text {
+  min-width: 34rpx;
+  color: #17212b;
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: 850;
 }
 
 .stepper button::after {
@@ -42,13 +95,16 @@
 
 .total {
   margin-top: 24rpx;
+  padding-top: 22rpx;
+  border-top: 1rpx solid rgba(31, 41, 51, 0.08);
+  font-weight: 800;
 }
 
 .phone-panel {
   margin-top: 26rpx;
   padding: 22rpx;
   border: 1rpx solid rgba(198, 125, 69, 0.22);
-  border-radius: 14rpx;
+  border-radius: 16rpx;
   background: #fff7ed;
 }
 
@@ -61,7 +117,7 @@
 .demo-bind-row {
   margin-top: 14rpx;
   display: grid;
-  grid-template-columns: 1fr 128rpx;
+  grid-template-columns: 1fr 132rpx;
   gap: 14rpx;
   align-items: center;
 }
@@ -70,7 +126,7 @@
   height: 72rpx;
   padding: 0 18rpx;
   border: 1rpx solid rgba(31, 41, 51, 0.12);
-  border-radius: 12rpx;
+  border-radius: 14rpx;
   background: #ffffff;
   font-size: 25rpx;
 }
@@ -80,11 +136,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12rpx;
+  border-radius: 14rpx;
   background: #2f6f73;
   color: #ffffff;
   font-size: 25rpx;
-  font-weight: 750;
+  font-weight: 800;
 }
 
 .mini-btn::after {

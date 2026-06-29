@@ -1,25 +1,40 @@
-<view class="page">
-  <view class="hero">
+<view class="page home-page">
+  <view class="store-hero fade-up">
+    <view class="hero-glow"></view>
+    <view class="hero-kicker">本地澡堂电子券</view>
     <view class="hero-title">{{store.name || '清泉浴池'}}</view>
     <view class="hero-subtitle">营业中 {{store.hours || '10:00-23:30'}} · 到店出示电子券</view>
+    <view class="hero-tags">
+      <text>即买即用</text>
+      <text>动态码核销</text>
+    </view>
   </view>
 
   <view class="notice">{{store.notice || 'Demo 阶段使用模拟支付，不产生真实收款。'}}</view>
 
+  <view class="section-head">
+    <view>
+      <view class="section-title">精选套餐</view>
+      <view class="subtle">选择适合的洗浴电子券，到店扫码核销</view>
+    </view>
+  </view>
+
   <view class="stack">
-    <view class="card" wx:for="{{products}}" wx:key="_id">
-      <view class="row">
-        <view>
+    <view class="card product-card fade-up" wx:for="{{products}}" wx:key="_id">
+      <view class="row product-main">
+        <view class="product-copy">
           <view class="title">{{item.name}}</view>
           <view class="subtle">{{item.description}}</view>
         </view>
         <view class="price">{{item.priceText}}</view>
       </view>
-      <button class="btn secondary" data-id="{{item._id}}" bindtap="goProduct">
-        查看详情
-      </button>
+      <view class="product-meta">
+        <text>电子券</text>
+        <text>到店核销</text>
+      </view>
+      <button class="btn secondary" hover-class="btn-hover" data-id="{{item._id}}" bindtap="goProduct">查看详情</button>
     </view>
   </view>
 
-  <button wx:if="{{showSeedButton}}" class="btn secondary seed" bindtap="seedDemo">初始化 Demo 数据</button>
+  <button wx:if="{{showSeedButton}}" class="btn secondary seed" hover-class="btn-hover" bindtap="seedDemo">初始化 Demo 数据</button>
 </view>

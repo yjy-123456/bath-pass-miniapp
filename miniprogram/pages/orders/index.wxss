@@ -1,3 +1,15 @@
+.order {
+  overflow: hidden;
+}
+
+.order-head {
+  align-items: flex-start;
+}
+
+.order-copy {
+  min-width: 0;
+}
+
 .order .title {
   font-size: 31rpx;
 }
@@ -6,8 +18,25 @@
   margin-top: 20rpx;
   padding-top: 18rpx;
   display: grid;
-  gap: 10rpx;
+  grid-template-columns: 140rpx 1fr;
+  gap: 12rpx 18rpx;
+  align-items: center;
   border-top: 1rpx solid rgba(31, 41, 51, 0.08);
-  color: #4b5563;
   font-size: 25rpx;
+}
+
+.meta-label {
+  color: #8a94a3;
+}
+
+.meta-value {
+  min-width: 0;
+  color: #1f2933;
+  text-align: right;
+  font-weight: 750;
+  word-break: break-all;
+}
+
+.price-text {
+  color: #b87333;
 }
