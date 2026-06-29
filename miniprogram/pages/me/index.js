@@ -38,9 +38,14 @@ Page({
 
   async bindPhone(event) {
     const { code, errMsg } = event.detail || {};
+    console.log('getPhoneNumber result:', event.detail);
     if (!code) {
       const denied = errMsg && errMsg.includes('deny');
-      wx.showToast({ title: denied ? '需要授权手机号后才能绑定' : '手机号授权已取消', icon: 'none' });
+      const canceled = errMsg && errMsg.includes('cancel');
+      wx.showToast({
+        title: denied || canceled ? '手机号授权已取消' : '未获取到手机号授权，请用真机或检查手机号能力配置',
+        icon: 'none',
+      });
       return;
     }
     try {
