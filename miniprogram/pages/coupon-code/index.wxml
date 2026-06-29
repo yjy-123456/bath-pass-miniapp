@@ -12,6 +12,6 @@
 
     <view class="token">{{qrPayload}}</view>
     <view class="timer">动态码 {{secondsLeft}} 秒后过期</view>
-    <button class="btn" bindtap="refreshCode">刷新动态码</button>
+    <button class="btn" hover-class="btn-hover" bindtap="refreshCode">刷新动态码</button>
   </view>
 </view>

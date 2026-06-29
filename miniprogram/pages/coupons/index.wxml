@@ -26,7 +26,7 @@
           <text class="badge">{{item.statusText}}</text>
         </view>
       </view>
-      <button wx:if="{{item.status === 'unused'}}" class="btn secondary" data-id="{{item._id}}" bindtap="showCode">查看二维码</button>
+      <button wx:if="{{item.status === 'unused'}}" class="btn secondary" hover-class="btn-hover" data-id="{{item._id}}" bindtap="showCode">查看二维码</button>
     </view>
   </view>
 

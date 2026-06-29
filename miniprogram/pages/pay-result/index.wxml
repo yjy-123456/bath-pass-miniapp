@@ -6,8 +6,8 @@
     </view>
     <view class="title">{{paid ? '模拟支付成功' : '确认模拟支付'}}</view>
     <view class="subtle">{{message}}</view>
-    <button wx:if="{{!paid}}" class="btn" bindtap="mockPay">确认支付</button>
-    <button wx:if="{{paid}}" class="btn" bindtap="goCoupons">查看我的券</button>
-    <button class="btn secondary" bindtap="goHome">返回套餐</button>
+    <button wx:if="{{!paid}}" class="btn" hover-class="btn-hover" bindtap="mockPay">确认支付</button>
+    <button wx:if="{{paid}}" class="btn" hover-class="btn-hover" bindtap="goCoupons">查看我的券</button>
+    <button class="btn secondary" hover-class="btn-hover" bindtap="goHome">返回套餐</button>
   </view>
 </view>
