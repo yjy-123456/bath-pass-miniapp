@@ -19,6 +19,7 @@ const requiredFiles = [
   'cloudfunctions/getProducts/index.js',
   'cloudfunctions/getProfile/index.js',
   'cloudfunctions/bindPhoneNumber/index.js',
+  'cloudfunctions/bindDemoPhoneNumber/index.js',
   'cloudfunctions/getMyOrders/index.js',
   'cloudfunctions/searchMerchantCoupons/index.js',
   'cloudfunctions/setCurrentUserAsDemoStaff/index.js',

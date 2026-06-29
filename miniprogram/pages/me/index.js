@@ -10,6 +10,7 @@ Page({
     identityText: '普通用户',
     storePhone: '',
     openid: '',
+    demoPhoneNumber: '',
   },
 
   onShow() {
@@ -50,6 +51,22 @@ Page({
     }
     try {
       await app.callFunction('bindPhoneNumber', { code });
+      wx.showToast({ title: '已绑定', icon: 'success' });
+      await this.loadProfile();
+    } catch (error) {
+      wx.showToast({ title: error.message || '绑定失败', icon: 'none' });
+    }
+  },
+
+  onDemoPhoneInput(event) {
+    this.setData({ demoPhoneNumber: event.detail.value });
+  },
+
+  async bindDemoPhone() {
+    try {
+      await app.callFunction('bindDemoPhoneNumber', {
+        phoneNumber: this.data.demoPhoneNumber,
+      });
       wx.showToast({ title: '已绑定', icon: 'success' });
       await this.loadProfile();
     } catch (error) {

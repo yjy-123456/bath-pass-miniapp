@@ -8,6 +8,7 @@ Page({
     totalText: '¥0',
     needPhone: false,
     bindingPhone: false,
+    demoPhoneNumber: '',
   },
 
   onLoad(options) {
@@ -71,6 +72,24 @@ Page({
     try {
       this.setData({ bindingPhone: true });
       await app.callFunction('bindPhoneNumber', { code });
+      this.setData({ needPhone: false, bindingPhone: false });
+      await this.createOrderAndPay();
+    } catch (error) {
+      this.setData({ bindingPhone: false });
+      wx.showToast({ title: error.message || '手机号绑定失败', icon: 'none' });
+    }
+  },
+
+  onDemoPhoneInput(event) {
+    this.setData({ demoPhoneNumber: event.detail.value });
+  },
+
+  async bindDemoPhoneAndBuy() {
+    try {
+      this.setData({ bindingPhone: true });
+      await app.callFunction('bindDemoPhoneNumber', {
+        phoneNumber: this.data.demoPhoneNumber,
+      });
       this.setData({ needPhone: false, bindingPhone: false });
       await this.createOrderAndPay();
     } catch (error) {

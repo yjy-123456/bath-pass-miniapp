@@ -11,6 +11,13 @@
         {{hasPhone ? '换绑' : '绑定'}}
       </button>
     </view>
+    <view class="demo-phone">
+      <view class="label">Demo 手动绑定</view>
+      <view class="demo-bind-row">
+        <input class="phone-input" type="number" maxlength="11" placeholder="输入测试手机号" value="{{demoPhoneNumber}}" bindinput="onDemoPhoneInput" />
+        <button class="mini-btn secondary" bindtap="bindDemoPhone">{{hasPhone ? '换绑' : '绑定'}}</button>
+      </view>
+    </view>
   </view>
 
   <view class="card menu">
