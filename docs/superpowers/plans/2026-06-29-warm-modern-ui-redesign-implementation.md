@@ -183,7 +183,7 @@ tab png icons ok
 Run:
 
 ```bash
-git add miniprogram/app.json miniprogram/assets/icons
+git add miniprogram/app.json miniprogram/assets/icons docs/superpowers/plans/2026-06-29-warm-modern-ui-redesign-implementation.md
 git commit -m "style: use png tab bar runtime icons"
 ```
 
