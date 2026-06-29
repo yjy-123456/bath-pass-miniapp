@@ -1,4 +1,5 @@
 const { cloud, db, fail, ok, requireStaff } = require('./_shared/db');
+const { createContactSnapshot } = require('./_shared/package');
 
 function escapeRegExp(value) {
   return String(value || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -29,5 +30,28 @@ exports.main = async (event) => {
     .limit(50)
     .get();
 
-  return ok({ coupons: result.data });
+  const userOpenids = Array.from(new Set(result.data
+    .filter((coupon) => !coupon.contactPhoneMaskedSnapshot && coupon.openid)
+    .map((coupon) => coupon.openid)));
+
+  const userPhoneMap = {};
+  await Promise.all(userOpenids.map(async (openid) => {
+    const userResult = await db.collection('users').where({ openid }).limit(1).get();
+    const user = userResult.data[0];
+    if (user && user.phoneNumber) {
+      userPhoneMap[openid] = createContactSnapshot(user.phoneNumber);
+    }
+  }));
+
+  const coupons = result.data.map((coupon) => {
+    const fallbackSnapshot = userPhoneMap[coupon.openid] || {};
+    return {
+      ...fallbackSnapshot,
+      ...coupon,
+      contactPhoneSnapshot: coupon.contactPhoneSnapshot || fallbackSnapshot.contactPhoneSnapshot || '',
+      contactPhoneMaskedSnapshot: coupon.contactPhoneMaskedSnapshot || fallbackSnapshot.contactPhoneMaskedSnapshot || '',
+    };
+  });
+
+  return ok({ coupons });
 };
