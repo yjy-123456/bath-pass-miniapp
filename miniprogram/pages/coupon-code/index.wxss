@@ -1,27 +1,81 @@
 .code-card {
+  position: relative;
+  overflow: hidden;
+  padding: 34rpx 28rpx 30rpx;
+  border-color: rgba(184, 115, 51, 0.18);
+  background:
+    radial-gradient(circle at 0 128rpx, transparent 0, transparent 22rpx, rgba(255, 255, 255, 0.96) 23rpx),
+    radial-gradient(circle at 100% 128rpx, transparent 0, transparent 22rpx, rgba(255, 255, 255, 0.96) 23rpx),
+    linear-gradient(180deg, #ffffff, #fffaf4);
   text-align: center;
+}
+
+.code-card::after {
+  content: "";
+  position: absolute;
+  top: 128rpx;
+  left: 30rpx;
+  right: 30rpx;
+  border-top: 2rpx dashed rgba(184, 115, 51, 0.2);
+}
+
+.code-head {
+  position: relative;
+  z-index: 1;
+  padding-bottom: 34rpx;
+}
+
+.code-card .title {
+  font-size: 32rpx;
+  line-height: 1.35;
+}
+
+.qr-frame {
+  position: relative;
+  z-index: 1;
+  width: 488rpx;
+  max-width: 100%;
+  margin: 28rpx auto 24rpx;
+  padding: 28rpx;
+  border: 1rpx solid rgba(31, 41, 51, 0.08);
+  border-radius: 18rpx;
+  background: #ffffff;
+  box-shadow: 0 12rpx 28rpx rgba(45, 55, 72, 0.08);
 }
 
 .qr-image {
   width: 420rpx;
   height: 420rpx;
-  margin: 32rpx auto 24rpx;
-  border: 14rpx solid #f0f4f4;
-  background: #ffffff;
+  display: block;
+  margin: 0 auto;
 }
 
 .token {
-  margin: 16rpx 0;
-  padding: 14rpx;
-  border-radius: 12rpx;
-  background: #f4f7f7;
+  margin: 18rpx 0;
+  padding: 18rpx;
+  border: 1rpx solid rgba(47, 111, 115, 0.1);
+  border-radius: 14rpx;
+  background: #f7fbfa;
   color: #334155;
-  font-size: 22rpx;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 21rpx;
+  line-height: 1.55;
   word-break: break-all;
 }
 
 .timer {
-  color: #b45309;
-  font-size: 24rpx;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 4rpx;
+  padding: 10rpx 18rpx;
+  border-radius: 999rpx;
+  background: #fff7ed;
+  color: #9a5b24;
+  font-size: 23rpx;
   font-weight: 750;
+}
+
+.code-card .btn {
+  margin-top: 24rpx;
 }

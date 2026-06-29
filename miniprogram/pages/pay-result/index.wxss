@@ -1,12 +1,13 @@
 .result {
-  margin-top: 80rpx;
+  margin-top: 72rpx;
+  padding: 42rpx 30rpx 32rpx;
   text-align: center;
 }
 
-.icon {
-  width: 120rpx;
-  height: 120rpx;
-  margin: 16rpx auto 28rpx;
+.status-icon {
+  width: 132rpx;
+  height: 132rpx;
+  margin: 14rpx auto 30rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,13 +16,34 @@
   color: #b45309;
   font-size: 64rpx;
   font-weight: 800;
+  box-shadow: 0 14rpx 28rpx rgba(184, 115, 51, 0.12);
 }
 
-.icon.paid {
-  background: #dff3ea;
-  color: #16805f;
+.status-icon.paid {
+  background: #e6f3ef;
+  box-shadow: 0 14rpx 28rpx rgba(47, 111, 115, 0.14);
+}
+
+.status-image {
+  width: 62rpx;
+  height: 62rpx;
+  display: block;
+}
+
+.result .title {
+  font-size: 34rpx;
+  line-height: 1.35;
 }
 
 .subtle {
   margin-top: 14rpx;
+  line-height: 1.7;
+}
+
+.result .btn {
+  margin-top: 28rpx;
+}
+
+.result .btn.secondary {
+  margin-top: 18rpx;
 }

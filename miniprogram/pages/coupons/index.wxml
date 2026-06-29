@@ -1,23 +1,37 @@
 <view class="page">
   <view class="tabs">
-    <view class="{{tab === 'unused' ? 'active' : ''}}" data-tab="unused" bindtap="switchTab">未使用 {{groups.unused.length}}</view>
-    <view class="{{tab === 'used' ? 'active' : ''}}" data-tab="used" bindtap="switchTab">已使用 {{groups.used.length}}</view>
-    <view class="{{tab === 'expired' ? 'active' : ''}}" data-tab="expired" bindtap="switchTab">已过期 {{groups.expired.length}}</view>
+    <view class="tab-item {{tab === 'unused' ? 'active' : ''}}" data-tab="unused" bindtap="switchTab">
+      <view class="tab-label">未使用</view>
+      <view class="tab-count">{{groups.unused.length}}</view>
+    </view>
+    <view class="tab-item {{tab === 'used' ? 'active' : ''}}" data-tab="used" bindtap="switchTab">
+      <view class="tab-label">已使用</view>
+      <view class="tab-count">{{groups.used.length}}</view>
+    </view>
+    <view class="tab-item {{tab === 'expired' ? 'active' : ''}}" data-tab="expired" bindtap="switchTab">
+      <view class="tab-label">已过期</view>
+      <view class="tab-count">{{groups.expired.length}}</view>
+    </view>
   </view>
 
   <view wx:if="{{currentCoupons.length}}" class="stack">
-    <view class="card coupon" wx:for="{{currentCoupons}}" wx:key="_id">
-      <view class="row">
-        <view>
+    <view class="coupon fade-up" wx:for="{{currentCoupons}}" wx:key="_id">
+      <view class="coupon-main">
+        <view class="coupon-copy">
           <view class="title">{{item.productSnapshot.name}}</view>
           <view class="subtle">券号 {{item.couponNo}}</view>
           <view class="subtle">有效期至 {{item.validToText}}</view>
         </view>
-        <text class="badge">{{item.statusText}}</text>
+        <view class="coupon-status">
+          <text class="badge">{{item.statusText}}</text>
+        </view>
       </view>
       <button wx:if="{{item.status === 'unused'}}" class="btn secondary" data-id="{{item._id}}" bindtap="showCode">查看二维码</button>
     </view>
   </view>
 
-  <view wx:else class="empty">暂无对应电子券</view>
+  <view wx:else class="empty">
+    <image class="empty-icon" src="/assets/icons/coupon.svg" mode="aspectFit"></image>
+    <view>暂无对应电子券</view>
+  </view>
 </view>

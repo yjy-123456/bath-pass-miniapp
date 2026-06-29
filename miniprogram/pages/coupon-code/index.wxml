@@ -1,10 +1,14 @@
 <view class="page">
   <view class="card code-card">
-    <view class="title">{{coupon.productSnapshot.name || '电子券'}}</view>
-    <view class="subtle">券号 {{coupon.couponNo}}</view>
-    <view class="subtle">有效期至 {{validToText}}</view>
+    <view class="code-head">
+      <view class="title">{{coupon.productSnapshot.name || '电子券'}}</view>
+      <view class="subtle">券号 {{coupon.couponNo}}</view>
+      <view class="subtle">有效期至 {{validToText}}</view>
+    </view>
 
-    <image class="qr-image" src="{{qrImage}}" mode="aspectFit" show-menu-by-longpress="true"></image>
+    <view class="qr-frame">
+      <image class="qr-image" src="{{qrImage}}" mode="aspectFit" show-menu-by-longpress="true"></image>
+    </view>
 
     <view class="token">{{qrPayload}}</view>
     <view class="timer">动态码 {{secondsLeft}} 秒后过期</view>
