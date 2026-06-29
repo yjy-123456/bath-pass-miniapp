@@ -14,9 +14,9 @@
   ],
   "window": {
     "navigationBarTitleText": "澡堂电子券",
-    "navigationBarBackgroundColor": "#fbfaf8",
+    "navigationBarBackgroundColor": "#f7f2ea",
     "navigationBarTextStyle": "black",
-    "backgroundColor": "#f4f1ec"
+    "backgroundColor": "#f7f2ea"
   },
   "tabBar": {
     "color": "#7b8794",
@@ -26,15 +26,21 @@
     "list": [
       {
         "pagePath": "pages/home/index",
-        "text": "套餐"
+        "text": "套餐",
+        "iconPath": "assets/icons/package.svg",
+        "selectedIconPath": "assets/icons/package-active.svg"
       },
       {
         "pagePath": "pages/coupons/index",
-        "text": "我的券"
+        "text": "我的券",
+        "iconPath": "assets/icons/coupon.svg",
+        "selectedIconPath": "assets/icons/coupon-active.svg"
       },
       {
         "pagePath": "pages/me/index",
-        "text": "我的"
+        "text": "我的",
+        "iconPath": "assets/icons/profile.svg",
+        "selectedIconPath": "assets/icons/profile-active.svg"
       }
     ]
   },
