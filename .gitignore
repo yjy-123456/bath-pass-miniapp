@@ -6,3 +6,4 @@ cloudfunctions/*/node_modules/
 .idea/
 .vscode/
 project.private.config.json
+.superpowers/
