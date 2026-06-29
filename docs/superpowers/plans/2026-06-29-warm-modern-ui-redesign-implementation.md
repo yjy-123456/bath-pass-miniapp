@@ -4,15 +4,15 @@
 
 **Goal:** Redesign the WeChat mini program UI with the approved warm modern style, local icons, unified layouts, and subtle CSS animations while preserving all business behavior.
 
-**Architecture:** Keep the existing mini program page structure and JavaScript behavior. Add local SVG icon assets, wire tab bar icons in `app.json`, build a shared visual system in `app.wxss`, then update WXML/WXSS page surfaces in small groups. Verification relies on static checks, event binding preservation, asset existence, and the existing `npm run check` command.
+**Architecture:** Keep the existing mini program page structure and JavaScript behavior. Add local SVG icon source/page assets, generate PNG runtime assets for native tab bar icons, wire tab bar PNG icons in `app.json`, build a shared visual system in `app.wxss`, then update WXML/WXSS page surfaces in small groups. Verification relies on static checks, event binding preservation, asset existence, and the existing `npm run check` command.
 
-**Tech Stack:** WeChat Mini Program WXML/WXSS/JSON, local SVG assets, Node.js test/check scripts.
+**Tech Stack:** WeChat Mini Program WXML/WXSS/JSON, local SVG source/page assets, PNG tab bar runtime assets, Node.js test/check scripts.
 
 ---
 
 ## File Structure
 
-- Create `miniprogram/assets/icons/`: local SVG line icons for tab bar and page menu/action UI.
+- Create `miniprogram/assets/icons/`: local SVG line icons for source/page menu/action UI, plus generated PNG runtime icons for the native tab bar.
 - Modify `miniprogram/app.json`: add tab bar icon paths and align window colors with the warm modern visual system.
 - Modify `miniprogram/app.wxss`: shared page, typography, card, button, input, badge, empty state, icon, and animation styles.
 - Modify user WXML/WXSS:
@@ -49,6 +49,12 @@
 - Create: `miniprogram/assets/icons/coupon-active.svg`
 - Create: `miniprogram/assets/icons/profile.svg`
 - Create: `miniprogram/assets/icons/profile-active.svg`
+- Create: `miniprogram/assets/icons/package.png`
+- Create: `miniprogram/assets/icons/package-active.png`
+- Create: `miniprogram/assets/icons/coupon.png`
+- Create: `miniprogram/assets/icons/coupon-active.png`
+- Create: `miniprogram/assets/icons/profile.png`
+- Create: `miniprogram/assets/icons/profile-active.png`
 - Create: `miniprogram/assets/icons/order.svg`
 - Create: `miniprogram/assets/icons/phone.svg`
 - Create: `miniprogram/assets/icons/contact.svg`
@@ -60,6 +66,7 @@
 - Create: `miniprogram/assets/icons/alert.svg`
 - Create: `miniprogram/assets/icons/chevron.svg`
 - Modify: `miniprogram/app.json`
+- Modify: `docs/superpowers/plans/2026-06-29-warm-modern-ui-redesign-implementation.md`
 
 - [ ] **Step 1: Create icon directory**
 
@@ -94,7 +101,31 @@ Use this exact template style for every SVG:
 
 Replace the path geometry per icon, keep `width="64"`, `height="64"`, `viewBox="0 0 64 64"`, `fill="none"`, `stroke-width="4"`, `stroke-linecap="round"`, and `stroke-linejoin="round"`.
 
-- [ ] **Step 3: Wire tab bar icons**
+- [ ] **Step 3: Generate PNG tab bar runtime icons**
+
+Generate 81x81 PNG files from the six tab SVGs so native WeChat tab bar runtime assets do not depend on SVG compatibility:
+
+```bash
+tmpdir=$(mktemp -d)
+for name in package package-active coupon coupon-active profile profile-active; do
+  qlmanage -t -s 81 -o "$tmpdir" "miniprogram/assets/icons/$name.svg"
+  mv "$tmpdir/$name.svg.png" "miniprogram/assets/icons/$name.png"
+done
+rm -rf "$tmpdir"
+```
+
+Expected: these files exist and are 81x81 PNG images:
+
+```text
+miniprogram/assets/icons/package.png
+miniprogram/assets/icons/package-active.png
+miniprogram/assets/icons/coupon.png
+miniprogram/assets/icons/coupon-active.png
+miniprogram/assets/icons/profile.png
+miniprogram/assets/icons/profile-active.png
+```
+
+- [ ] **Step 4: Wire tab bar icons**
 
 Update `miniprogram/app.json` tab bar entries to include `iconPath` and `selectedIconPath`:
 
@@ -102,8 +133,8 @@ Update `miniprogram/app.json` tab bar entries to include `iconPath` and `selecte
 {
   "pagePath": "pages/home/index",
   "text": "套餐",
-  "iconPath": "assets/icons/package.svg",
-  "selectedIconPath": "assets/icons/package-active.svg"
+  "iconPath": "assets/icons/package.png",
+  "selectedIconPath": "assets/icons/package-active.png"
 }
 ```
 
@@ -111,8 +142,8 @@ Update `miniprogram/app.json` tab bar entries to include `iconPath` and `selecte
 {
   "pagePath": "pages/coupons/index",
   "text": "我的券",
-  "iconPath": "assets/icons/coupon.svg",
-  "selectedIconPath": "assets/icons/coupon-active.svg"
+  "iconPath": "assets/icons/coupon.png",
+  "selectedIconPath": "assets/icons/coupon-active.png"
 }
 ```
 
@@ -120,8 +151,8 @@ Update `miniprogram/app.json` tab bar entries to include `iconPath` and `selecte
 {
   "pagePath": "pages/me/index",
   "text": "我的",
-  "iconPath": "assets/icons/profile.svg",
-  "selectedIconPath": "assets/icons/profile-active.svg"
+  "iconPath": "assets/icons/profile.png",
+  "selectedIconPath": "assets/icons/profile-active.png"
 }
 ```
 
@@ -133,30 +164,30 @@ Also set:
 "selectedColor": "#2f6f73"
 ```
 
-- [ ] **Step 4: Verify icon files and JSON**
+- [ ] **Step 5: Verify icon files and JSON**
 
 Run:
 
 ```bash
-node -e "const fs=require('fs'); const app=JSON.parse(fs.readFileSync('miniprogram/app.json','utf8')); for (const item of app.tabBar.list) { for (const key of ['iconPath','selectedIconPath']) { if (!fs.existsSync('miniprogram/'+item[key])) throw new Error('Missing '+item[key]); } } console.log('tab icons ok')"
+node -e "const fs=require('fs'); const app=JSON.parse(fs.readFileSync('miniprogram/app.json','utf8')); for (const item of app.tabBar.list) { for (const key of ['iconPath','selectedIconPath']) { const asset=item[key]; if (!asset.endsWith('.png')) throw new Error('Expected png '+asset); if (!fs.existsSync('miniprogram/'+asset)) throw new Error('Missing '+asset); } } console.log('tab png icons ok')"
 ```
 
 Expected output includes:
 
 ```text
-tab icons ok
+tab png icons ok
 ```
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 6: Commit**
 
 Run:
 
 ```bash
 git add miniprogram/app.json miniprogram/assets/icons
-git commit -m "style: add miniapp icons and tab bar assets"
+git commit -m "style: use png tab bar runtime icons"
 ```
 
-Expected: commit succeeds with only app JSON and icon assets.
+Expected: commit succeeds with only app JSON, icon assets, and this plan update.
 
 ## Task 2: Build Shared Warm Modern Style System
 
@@ -801,13 +832,13 @@ Expected: only intentional implementation files are modified. `.superpowers/` ma
 Run:
 
 ```bash
-node -e "const fs=require('fs'); const app=JSON.parse(fs.readFileSync('miniprogram/app.json','utf8')); for (const item of app.tabBar.list) { for (const key of ['iconPath','selectedIconPath']) { const p='miniprogram/'+item[key]; if (!fs.existsSync(p)) throw new Error('Missing '+p); } } console.log('tab bar assets verified')"
+node -e "const fs=require('fs'); const app=JSON.parse(fs.readFileSync('miniprogram/app.json','utf8')); for (const item of app.tabBar.list) { for (const key of ['iconPath','selectedIconPath']) { const asset=item[key]; if (!asset.endsWith('.png')) throw new Error('Expected png '+asset); const p='miniprogram/'+asset; if (!fs.existsSync(p)) throw new Error('Missing '+p); } } console.log('tab bar png assets verified')"
 ```
 
 Expected output:
 
 ```text
-tab bar assets verified
+tab bar png assets verified
 ```
 
 - [ ] **Step 3: Verify key business handlers were not removed**
