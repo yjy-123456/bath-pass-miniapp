@@ -1,0 +1,29 @@
+<view class="page">
+  <view class="card">
+    <view class="title">订单/券查询</view>
+    <input class="input" placeholder="输入完整手机号或后几位" value="{{phoneKeyword}}" bindinput="onKeywordInput" />
+    <view class="filters">
+      <view class="{{status === '' ? 'on' : ''}}" data-status="" bindtap="switchStatus">全部</view>
+      <view class="{{status === 'unused' ? 'on' : ''}}" data-status="unused" bindtap="switchStatus">未使用</view>
+      <view class="{{status === 'used' ? 'on' : ''}}" data-status="used" bindtap="switchStatus">已使用</view>
+      <view class="{{status === 'expired' ? 'on' : ''}}" data-status="expired" bindtap="switchStatus">已过期</view>
+    </view>
+    <button class="btn" bindtap="search">查询</button>
+  </view>
+
+  <view wx:if="{{coupons.length}}" class="stack results">
+    <view class="card result" wx:for="{{coupons}}" wx:key="_id">
+      <view class="row">
+        <view>
+          <view class="result-title">{{item.productSnapshot.name}}</view>
+          <view class="subtle">券号 {{item.couponNo}}</view>
+          <view class="subtle">手机号 {{item.contactPhoneMaskedSnapshot || '-'}}</view>
+          <view class="subtle">有效期至 {{item.validToText}}</view>
+        </view>
+        <text class="badge">{{item.statusText}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:else class="empty">暂无查询结果</view>
+</view>

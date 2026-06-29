@@ -19,9 +19,9 @@ Page({
     }
   },
 
-  async seedDemo() {
+  async setDemoStaff() {
     try {
-      await app.callFunction('seedDemoData');
+      await app.callFunction('setCurrentUserAsDemoStaff');
       wx.showToast({ title: '已授权', icon: 'success' });
       await this.loadPermission();
     } catch (error) {
@@ -60,5 +60,9 @@ Page({
 
   goRecords() {
     wx.navigateTo({ url: '/pages/staff/records/index' });
+  },
+
+  goSearch() {
+    wx.navigateTo({ url: '/pages/staff/search/index' });
   },
 });

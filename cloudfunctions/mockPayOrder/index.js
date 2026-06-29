@@ -34,7 +34,11 @@ exports.main = async (event) => {
     product,
     quantity: order.quantity,
     paidAt: now,
-  });
+  }).map((coupon) => ({
+    ...coupon,
+    contactPhoneSnapshot: order.contactPhoneSnapshot || '',
+    contactPhoneMaskedSnapshot: order.contactPhoneMaskedSnapshot || '',
+  }));
 
   await Promise.all(drafts.map((coupon) => db.collection('coupons').add({ data: coupon })));
 

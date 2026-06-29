@@ -12,6 +12,7 @@ Page({
     coupon: { productSnapshot: {} },
     couponTail: '',
     validToText: '',
+    contactPhoneMasked: '',
     error: '',
   },
 
@@ -30,6 +31,7 @@ Page({
         coupon,
         couponTail: String(coupon.couponNo || '').slice(-4),
         validToText: formatDate(coupon.validTo),
+        contactPhoneMasked: coupon.contactPhoneMaskedSnapshot || result.contactPhoneMaskedSnapshot || '',
         error: '',
       });
     } catch (error) {

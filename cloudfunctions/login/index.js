@@ -1,29 +1,15 @@
-const { cloud, db, getActiveStaff, ok } = require('./_shared/db');
+const { cloud, getActiveStaff, getOrCreateUser, ok } = require('./_shared/db');
+const { hasBoundPhone } = require('./_shared/package');
 
 exports.main = async () => {
   const { OPENID } = cloud.getWXContext();
-  const now = new Date();
-  const userCollection = db.collection('users');
-  const existing = await userCollection.where({ openid: OPENID }).limit(1).get();
-
-  if (existing.data.length) {
-    await userCollection.doc(existing.data[0]._id).update({ data: { lastLoginAt: now } });
-  } else {
-    await userCollection.add({
-      data: {
-        openid: OPENID,
-        nickname: '微信用户',
-        avatarUrl: '',
-        role: 'user',
-        createdAt: now,
-        lastLoginAt: now,
-      },
-    });
-  }
-
+  const user = await getOrCreateUser(OPENID);
   const staff = await getActiveStaff(OPENID);
+
   return ok({
     openid: OPENID,
+    user,
+    hasPhone: hasBoundPhone(user),
     isStaff: Boolean(staff),
     staff,
   });

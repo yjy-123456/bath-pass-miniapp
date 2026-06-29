@@ -23,6 +23,10 @@
       <text class="subtle">券号后 4 位</text>
       <text>{{couponTail}}</text>
     </view>
+    <view class="info-row">
+      <text class="subtle">用户手机号</text>
+      <text>{{contactPhoneMasked || '-'}}</text>
+    </view>
     <button class="btn warn" bindtap="redeem">确认核销</button>
     <button class="btn secondary" bindtap="back">取消</button>
   </view>

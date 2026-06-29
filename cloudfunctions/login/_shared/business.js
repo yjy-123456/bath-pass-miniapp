@@ -101,6 +101,25 @@ function formatFen(fen) {
   return `¥${(fen / 100).toFixed(fen % 100 === 0 ? 0 : 2)}`;
 }
 
+function maskPhone(phoneNumber) {
+  const text = String(phoneNumber || '').trim();
+  if (!text) return '';
+  if (text.length < 7) return text;
+  return `${text.slice(0, 3)}****${text.slice(-4)}`;
+}
+
+function createContactSnapshot(phoneNumber) {
+  const phone = String(phoneNumber || '').trim();
+  return {
+    contactPhoneSnapshot: phone,
+    contactPhoneMaskedSnapshot: maskPhone(phone),
+  };
+}
+
+function hasBoundPhone(user) {
+  return Boolean(user && String(user.phoneNumber || '').trim());
+}
+
 function isCouponRedeemable(coupon, now = new Date()) {
   if (!coupon) return { ok: false, reason: '券不存在' };
   if (coupon.status === 'used') return { ok: false, reason: '已使用' };
@@ -115,14 +134,17 @@ module.exports = {
   REDEEM_CODE_TTL_SECONDS,
   computeOrderTotal,
   couponCopiesForOrder,
+  createContactSnapshot,
   createCouponDrafts,
   endOfValidityDay,
   formatFen,
+  hasBoundPhone,
   isCouponRedeemable,
   isRedeemCodeActive,
   makeOrderNo,
   makeRedeemExpiry,
   makeRedeemToken,
+  maskPhone,
   normalizeRedeemToken,
   snapshotProduct,
 };

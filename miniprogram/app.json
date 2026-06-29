@@ -5,9 +5,12 @@
     "pages/pay-result/index",
     "pages/coupons/index",
     "pages/coupon-code/index",
+    "pages/me/index",
+    "pages/orders/index",
     "pages/staff/index/index",
     "pages/staff/confirm/index",
-    "pages/staff/records/index"
+    "pages/staff/records/index",
+    "pages/staff/search/index"
   ],
   "window": {
     "navigationBarTitleText": "澡堂电子券",
@@ -30,8 +33,8 @@
         "text": "我的券"
       },
       {
-        "pagePath": "pages/staff/index/index",
-        "text": "商家"
+        "pagePath": "pages/me/index",
+        "text": "我的"
       }
     ]
   },

@@ -34,6 +34,18 @@
       <text>合计</text>
       <text class="price">{{totalText}}</text>
     </view>
-    <button class="btn" bindtap="buyNow">模拟下单并支付</button>
+    <view wx:if="{{needPhone}}" class="phone-panel">
+      <view class="section-title">绑定手机号</view>
+      <view class="subtle">购买电子券需绑定手机号，便于门店核对订单和售后联系。</view>
+      <button class="btn" loading="{{bindingPhone}}" open-type="getPhoneNumber" bindgetphonenumber="bindPhoneAndBuy">授权手机号并继续</button>
+      <view class="demo-phone">
+        <view class="subtle">Demo 阶段如无法使用微信手机号授权，可手动输入测试手机号。</view>
+        <view class="demo-bind-row">
+          <input class="phone-input" type="number" maxlength="11" placeholder="输入测试手机号" value="{{demoPhoneNumber}}" bindinput="onDemoPhoneInput" />
+          <button class="mini-btn" loading="{{bindingPhone}}" bindtap="bindDemoPhoneAndBuy">继续</button>
+        </view>
+      </view>
+    </view>
+    <button wx:else class="btn" bindtap="buyNow">模拟下单并支付</button>
   </view>
 </view>
