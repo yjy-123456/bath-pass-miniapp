@@ -104,14 +104,14 @@
 .staff-actions {
   margin-top: 20rpx;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 16rpx;
+  grid-template-columns: 1fr;
+  gap: 14rpx;
 }
 
 .action-btn {
   width: 100%;
   min-width: 0;
-  height: 96rpx;
+  height: 86rpx;
   margin: 0;
   padding: 0 18rpx;
   display: flex;
