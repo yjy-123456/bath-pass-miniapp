@@ -16,14 +16,41 @@
   font-weight: 800;
 }
 
+.success-icon {
+  width: 56rpx;
+  height: 56rpx;
+}
+
+.record-counts {
+  margin-top: 14rpx;
+  display: flex;
+  justify-content: center;
+  gap: 14rpx;
+  flex-wrap: wrap;
+  color: #6b7280;
+  font-size: 24rpx;
+}
+
+.record-counts text {
+  padding: 8rpx 14rpx;
+  border-radius: 999rpx;
+  background: #f3f7f6;
+}
+
 .records {
   margin-top: 22rpx;
 }
 
+.record-copy {
+  min-width: 0;
+}
+
 .record-title {
   margin-bottom: 8rpx;
+  color: #17212b;
   font-size: 27rpx;
   font-weight: 800;
+  line-height: 1.35;
 }
 
 .badge.failed {

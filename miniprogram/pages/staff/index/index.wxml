@@ -1,22 +1,37 @@
-<view class="page">
-  <view wx:if="{{!isStaff}}" class="card denied">
+<view class="page staff-page">
+  <view wx:if="{{!isStaff}}" class="card denied fade-up">
+    <image class="denied-icon" src="/assets/icons/alert.svg" mode="aspectFit"></image>
     <view class="title">暂无店员权限</view>
     <view class="subtle">请让管理员在 staff 集合中添加你的 openid，或在 Demo 环境使用下方按钮。</view>
-    <button class="btn" bindtap="setDemoStaff">设为 Demo 店员</button>
+    <button class="btn" hover-class="btn-hover" bindtap="setDemoStaff">设为 Demo 店员</button>
   </view>
 
   <block wx:else>
-    <view class="scan-box" bindtap="scanCode">
-      <view class="scan-mark">+</view>
-      <view>扫用户电子券二维码</view>
+    <view class="scan-box fade-up" bindtap="scanCode">
+      <view class="scan-corners">
+        <view class="scan-mark">
+          <image class="scan-icon" src="/assets/icons/scan.svg" mode="aspectFit"></image>
+        </view>
+      </view>
+      <view class="scan-title">扫用户电子券二维码</view>
+      <view class="scan-subtitle">支持 BATHPASS 动态码核销</view>
+      <view class="scan-line"></view>
     </view>
 
     <view class="card manual">
       <view class="title">手动输入核销码</view>
       <input class="input" placeholder="可粘贴 BATHPASS: 开头的动态码" value="{{token}}" bindinput="onTokenInput" />
-      <button class="btn" bindtap="checkToken">查询并确认</button>
-      <button class="btn secondary" bindtap="goRecords">今日核销记录</button>
-      <button class="btn secondary" bindtap="goSearch">订单/券查询</button>
+      <button class="btn" hover-class="btn-hover" bindtap="checkToken">查询并确认</button>
+      <view class="staff-actions">
+        <button class="action-btn" hover-class="btn-hover" bindtap="goRecords">
+          <image class="action-icon" src="/assets/icons/records.svg" mode="aspectFit"></image>
+          <text>今日核销记录</text>
+        </button>
+        <button class="action-btn" hover-class="btn-hover" bindtap="goSearch">
+          <image class="action-icon" src="/assets/icons/search.svg" mode="aspectFit"></image>
+          <text>订单/券查询</text>
+        </button>
+      </view>
     </view>
   </block>
 </view>

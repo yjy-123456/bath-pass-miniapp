@@ -1,15 +1,27 @@
 <view class="page">
-  <view wx:if="{{error}}" class="card">
-    <view class="title danger">不可核销</view>
+  <view wx:if="{{error}}" class="card confirm-card fade-up">
+    <view class="confirm-head">
+      <image class="confirm-icon" src="/assets/icons/alert.svg" mode="aspectFit"></image>
+      <view>
+        <view class="title danger">不可核销</view>
+        <view class="subtle">请返回重新扫码或检查动态码</view>
+      </view>
+    </view>
     <view class="notice">{{error}}</view>
-    <button class="btn secondary" bindtap="back">返回</button>
+    <button class="btn secondary" hover-class="btn-hover" bindtap="back">返回</button>
   </view>
 
-  <view wx:else class="card">
-    <view class="title">待确认核销</view>
+  <view wx:else class="card confirm-card fade-up">
+    <view class="confirm-head">
+      <image class="confirm-icon" src="/assets/icons/check.svg" mode="aspectFit"></image>
+      <view>
+        <view class="title">待确认核销</view>
+        <view class="subtle">请核对套餐、券号和手机号后确认</view>
+      </view>
+    </view>
     <view class="info-row">
       <text class="subtle">套餐</text>
-      <text>{{coupon.productSnapshot.name}}</text>
+      <text class="info-value">{{coupon.productSnapshot.name}}</text>
     </view>
     <view class="info-row">
       <text class="subtle">券状态</text>
@@ -17,17 +29,17 @@
     </view>
     <view class="info-row">
       <text class="subtle">有效期</text>
-      <text>{{validToText}}</text>
+      <text class="info-value">{{validToText}}</text>
     </view>
     <view class="info-row">
       <text class="subtle">券号后 4 位</text>
-      <text>{{couponTail}}</text>
+      <text class="info-value">{{couponTail}}</text>
     </view>
     <view class="info-row">
       <text class="subtle">用户手机号</text>
-      <text>{{contactPhoneMasked || '-'}}</text>
+      <text class="info-value">{{contactPhoneMasked || '-'}}</text>
     </view>
-    <button class="btn warn" bindtap="redeem">确认核销</button>
-    <button class="btn secondary" bindtap="back">取消</button>
+    <button class="btn warn" hover-class="btn-hover" bindtap="redeem">确认核销</button>
+    <button class="btn secondary" hover-class="btn-hover" bindtap="back">取消</button>
   </view>
 </view>

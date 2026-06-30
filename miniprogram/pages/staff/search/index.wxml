@@ -1,6 +1,12 @@
 <view class="page">
-  <view class="card">
-    <view class="title">订单/券查询</view>
+  <view class="card search-card fade-up">
+    <view class="search-head">
+      <image class="search-icon" src="/assets/icons/search.svg" mode="aspectFit"></image>
+      <view>
+        <view class="title">订单/券查询</view>
+        <view class="subtle">输入手机号或后几位，快速定位用户电子券</view>
+      </view>
+    </view>
     <input class="input" placeholder="输入完整手机号或后几位" value="{{phoneKeyword}}" bindinput="onKeywordInput" />
     <view class="filters">
       <view class="{{status === '' ? 'on' : ''}}" data-status="" bindtap="switchStatus">全部</view>
@@ -8,13 +14,13 @@
       <view class="{{status === 'used' ? 'on' : ''}}" data-status="used" bindtap="switchStatus">已使用</view>
       <view class="{{status === 'expired' ? 'on' : ''}}" data-status="expired" bindtap="switchStatus">已过期</view>
     </view>
-    <button class="btn" bindtap="search">查询</button>
+    <button class="btn" hover-class="btn-hover" bindtap="search">查询</button>
   </view>
 
   <view wx:if="{{coupons.length}}" class="stack results">
     <view class="card result" wx:for="{{coupons}}" wx:key="_id">
       <view class="row">
-        <view>
+        <view class="result-copy">
           <view class="result-title">{{item.productSnapshot.name}}</view>
           <view class="subtle">券号 {{item.couponNo}}</view>
           <view class="subtle">手机号 {{item.contactPhoneMaskedSnapshot || '-'}}</view>
@@ -25,5 +31,8 @@
     </view>
   </view>
 
-  <view wx:else class="empty">暂无查询结果</view>
+  <view wx:else class="empty">
+    <image class="empty-icon" src="/assets/icons/search.svg" mode="aspectFit"></image>
+    <view>暂无查询结果</view>
+  </view>
 </view>
