@@ -27,7 +27,7 @@ button::after {
 
 .page {
   min-height: 100vh;
-  padding: 24rpx 24rpx 56rpx;
+  padding: 24rpx 24rpx 160rpx;
 }
 
 .stack {

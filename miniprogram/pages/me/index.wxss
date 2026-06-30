@@ -60,13 +60,14 @@
 
 .demo-bind-row {
   margin-top: 12rpx;
-  display: grid;
-  grid-template-columns: 1fr 136rpx;
+  display: flex;
   gap: 14rpx;
   align-items: center;
 }
 
 .phone-input {
+  flex: 1 1 auto;
+  min-width: 0;
   height: 64rpx;
   padding: 0 18rpx;
   border: 1rpx solid rgba(31, 41, 51, 0.12);
@@ -76,8 +77,9 @@
 }
 
 .mini-btn {
-  min-width: 136rpx;
+  min-width: 0;
   height: 64rpx;
+  padding: 0 22rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -86,6 +88,10 @@
   color: #ffffff;
   font-size: 26rpx;
   font-weight: 800;
+}
+
+.demo-bind-row .mini-btn {
+  flex: 0 0 128rpx;
 }
 
 .mini-btn::after {
