@@ -104,12 +104,15 @@
 .staff-actions {
   margin-top: 20rpx;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 16rpx;
 }
 
 .action-btn {
+  width: 100%;
+  min-width: 0;
   height: 96rpx;
+  margin: 0;
   padding: 0 18rpx;
   display: flex;
   align-items: center;
@@ -121,6 +124,7 @@
   color: #25635f;
   font-size: 25rpx;
   font-weight: 800;
+  line-height: 1.2;
 }
 
 .action-btn::after {
@@ -130,4 +134,12 @@
 .action-icon {
   width: 34rpx;
   height: 34rpx;
+  flex: 0 0 34rpx;
+}
+
+.action-btn text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
